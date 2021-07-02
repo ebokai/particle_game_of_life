@@ -54,16 +54,6 @@ def attract_gaussian(f, r, a, repulsion_forces, forces, repel_distances, force_d
 
 	return fx, fy
 
-
-# def friction(vx, vy, friction_strength):
-
-# 	v = vx*vx + vy*vy
-# 	a = np.arctan2(vy,vx)
-# 	fx = friction_strength * np.cos(a) * v 
-# 	fy = friction_strength * np.sin(a) * v 
-
-# 	return fx, fy
-
 def initialize(xlim, ylim, n):
 
 	sn = int(np.sqrt(n)+1)
