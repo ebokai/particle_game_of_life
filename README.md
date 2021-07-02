@@ -2,7 +2,7 @@ particle game of life
 
 simulations of particles with asymmetric attraction/repulsion
 
----- ---- ---- ----
+----
 
   particle_gol_delete_frames.py: delete all rendered frames from output folder
   
