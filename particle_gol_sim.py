@@ -17,16 +17,13 @@ def sim_loop(data,params,forces):
 	sizes = pgol_func.get_sizes_v(vx,vy,sizes)
 
 	fx, fy = pgol_func.attract_gaussian(f, r, a, repel_forces, interaction_forces, repel_distances, force_distances)
-
-	Fx = fx
-	Fy = fy
-	Fx, Fy = pgol_func.vmax_zero(Fx, Fy, Fmax)	
+	fx, fy = pgol_func.vmax_zero(fx, fy, Fmax)	
 
 	x += vx * dt
 	y += vy * dt 
 
-	vx -= Fx * dt
-	vy -= Fy * dt
+	vx -= fx * dt
+	vy -= fy * dt
 	vx = pgol_func.speedup(vx)
 	vy = pgol_func.speedup(vy)
 	vx, vy = pgol_func.friction(vx, vy, friction_strength, dt)
@@ -34,9 +31,7 @@ def sim_loop(data,params,forces):
 	colors, ncol = pgol_func.get_colors(r, colors, ncol)
 
 	xy = np.vstack((x,y)).T
-
-
-
+	
 	data = [x, y, vx, vy, f, colors, ncol, sizes]
 
 	return xy, sizes, colors, data
