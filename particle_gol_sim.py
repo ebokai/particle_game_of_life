@@ -5,7 +5,7 @@ import numpy as np
 def sim_loop(data,params,forces):
 
 	[x, y, vx, vy, f, colors, ncol, sizes] = data
-	[n,dt,xlim,ylim,vmax,Fmax,friction_strength] = params
+	[n, dt, xlim, ylim, vmax, fmax, friction_strength] = params
 	[repel_distances, force_distances, repel_forces, interaction_forces] = forces
 
 	x = pgol_func.bound(x,xlim)
@@ -17,7 +17,7 @@ def sim_loop(data,params,forces):
 	sizes = pgol_func.get_sizes_v(vx,vy,sizes)
 
 	fx, fy = pgol_func.attract_gaussian(f, r, a, repel_forces, interaction_forces, repel_distances, force_distances)
-	fx, fy = pgol_func.vmax_zero(fx, fy, Fmax)	
+	fx, fy = pgol_func.vmax_zero(fx, fy, fmax)	
 
 	x += vx * dt
 	y += vy * dt 
