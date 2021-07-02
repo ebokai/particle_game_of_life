@@ -1,4 +1,3 @@
-
 import particle_gol_functions as pgol_func
 import matplotlib.pyplot as plt 
 import matplotlib.animation as anim 
@@ -93,7 +92,7 @@ for frame in range(frames):
 
 	plt.tight_layout(pad=0)
 	fstr = f'{frame}'.zfill(5)
-	plt.savefig(f'c:/users/hp/desktop/frames/frame_{fstr}.png',dpi=72,bbox_inches=None)
+	plt.savefig(f'c:/your_output_frames_folder/frames/frame_{fstr}.png',dpi=72,bbox_inches=None)
 
 	end = time.time()
 
