@@ -72,8 +72,8 @@ def initialize(xlim, ylim, n):
 	x = x[z]
 	y = y[z]
 
-	vx = uniform(-3,3,n)
-	vy = uniform(-3,3,n)
+	vx = uniform(-10,10,n)
+	vy = uniform(-10,10,n)
 	f = np.zeros((n,n))
 
 	return x,y,vx,vy,f
@@ -84,16 +84,16 @@ def block_matrix(mean, width, n_groups, n_particles_per_group, positive = True):
 	m = m.repeat(n_particles_per_group, axis = 1).repeat(n_particles_per_group, axis = 0)
 
 	if positive:
-		return np.abs(m).astype('int')
+		return np.abs(m)
 	else:
-		return m.astype('int')
+		return m
 
 def block_matrix_ri(rmin, rmax, n_groups, n_particles_per_group, positive = True):
 
-	m = np.random.randint(rmin, rmax, (n_groups, n_groups))
+	m = np.random.uniform(rmin, rmax, (n_groups, n_groups))
 	m = m.repeat(n_particles_per_group, axis = 1).repeat(n_particles_per_group, axis = 0)
 
-	return m.astype('int')
+	return m
 
 def colors(n_groups, n_particles_per_group):
 	cs = []
@@ -128,10 +128,11 @@ def avoid_group(r, vx, vy, r_threshold, multiplier):
 
 def get_sizes(r, old_sizes):
 	x = 0.25
-	i = r < 10
+	i = r < 2
 	j = np.sum(i, axis = 1)
-	j = j/np.amax(j)
-	sizes = 20 + 1000 * (1-j)**2
+	# j = j/np.amax(j)
+
+	sizes = 4 + 1/(j+1) * 1000
 	sizes = (1-x) * old_sizes + x * sizes
 	return sizes
 
@@ -145,24 +146,71 @@ def get_sizes_v(vx,vy,old_sizes):
 	sizes = (1-r) * old_sizes + r * sizes
 	return sizes
 
-def get_colors(r, colors, n_old):
+def get_sizes_xy(x,y,xlim,ylim,sizes):
+	# dx = np.abs(x+xlim)/xlim/2
+	dy = np.abs(y+ylim)/ylim/2
+
+	sizes = sizes + 10 * sizes * (1-dy)**6
+
+	# sizes = np.full(10,np.alen(x))
+	return sizes
+
+def get_colors_xy(x,y,xlim,ylim,colors):
+	dx = (xlim - np.abs(x))/xlim 
+	dy = np.abs(y+ylim)/ylim/2
+	cs = []
+	for kx,ky,h in zip(dx,dy,colors):
+
+		kr = (kx + ky)/2
+
+		u = 1 - np.cos(2*(ky-3/4)*np.pi)
+		v = 1 - 2 * np.abs(ky-1/2)
+		h_hsv = colorsys.rgb_to_hsv(h[0],h[1],h[2])
+		color = colorsys.hsv_to_rgb(h_hsv[0],0.25 + 0.75 * u/2,0.25 + 0.75 * v)
+		cs.append((color[0],color[1],color[2],0.2+0.8*kr**2))
+	return cs
+
+
+def get_colors(r, v, colors, n_old):
 	
-	i = r < 1
+	i = r < 2
 	j = np.sum(i, axis = 1)
 	
 	n = j/np.amax(j)
 
 	r = 0.25
+	q = v/np.amax(v)
 
 	n = (1-r) * n_old + r * n
 
 	
 	cs = []
 
-	for m,h in zip(n,colors):
+	for m1,m2,h in zip(n,q,colors):
 		h_hsv = colorsys.rgb_to_hsv(h[0],h[1],h[2])
-		color = colorsys.hsv_to_rgb(h_hsv[0],0.3 + 0.7*m,0.3 + 0.7*m)
-		cs.append((color[0],color[1],color[2],0.25 + 0.75 * m))
+		color = colorsys.hsv_to_rgb(h_hsv[0], 0.3 + 0.5 * m1 + 0.2 * m2, 0.3 + 0.5 * m1 + 0.2 * m2)
+		cs.append((color[0],color[1],color[2],0.25 + 0.5 * m1 + 0.25 * m2))
+	return cs, n
+
+def get_colors_vhue(r, v, colors, n_old):
+	
+	i = r < 2
+	j = np.sum(i, axis = 1)
+	
+	n = j/np.amax(j)
+
+	r = 0.25
+	q = v/np.amax(v)
+
+	n = (1-r) * n_old + r * n
+
+	
+	cs = []
+
+	for m1,m2,h in zip(n,q,colors):
+		h_hsv = colorsys.rgb_to_hsv(h[0],h[1],h[2])
+		color = colorsys.hsv_to_rgb(m2, 0.7 + 0.15 * m1 + 0.15 * m2, 0.7 + 0.15 * m1 + 0.15 * m2)
+		cs.append((color[0],color[1],color[2],0.5 + 0.25 * m1 + 0.25 * m2))
 	return cs, n
 
 def get_colors_v(r,vx,vy,colors):
@@ -187,12 +235,13 @@ def get_colors_v(r,vx,vy,colors):
 
 	return cs
 
-def friction(vx, vy, fs, dt):
+def friction(vx, vy, v, fs):
 
-	v = np.sqrt(vx*vx + vy*vy)
-	vx = vx * (1 - v * fs * dt)
-	vy = vy * (1 - v * fs * dt)
-	return vx, vy
+	a = np.arctan2(vy, vx)
+	Fx = np.cos(a) * v * fs
+	Fy = np.sin(a) * v * fs
+
+	return Fx, Fy
 
 def vmax(vx, vy, v_max):
 
@@ -226,3 +275,8 @@ def speedup(vx):
 	vx += np.sign(vx) * sx
 	return vx
 
+def force_drift(f):
+
+	xi = 0.01 * np.random.normal(0,1,np.shape(f))
+	fn = f * (1 + xi) 
+	return fn

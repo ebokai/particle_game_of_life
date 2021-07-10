@@ -5,7 +5,7 @@ import time
 import moviepy.video.io.ImageSequenceClip
 image_folder='c:/users/hp/desktop/frames'
 output_folder='c:/users/hp/desktop/frames/render'
-fps = 30
+fps = 24
 
 image_files = [image_folder+'/'+img for img in os.listdir(image_folder) if img.endswith(".png")]
 
