@@ -45,6 +45,8 @@ def attract(f, r, a, repulsion_forces, forces, repel_distances, force_distances)
 
 def attract_gaussian(f, r, a, repulsion_forces, forces, repel_distances, force_distances):
 
+	# gaussian repulsion force
+
 	f = repulsion_forces/(1+np.exp(5*(r-repel_distances))) + forces * np.exp(-(r-force_distances)**2/np.sqrt(force_distances)/2)
 
 	np.fill_diagonal(f,0)
@@ -55,6 +57,8 @@ def attract_gaussian(f, r, a, repulsion_forces, forces, repel_distances, force_d
 	return fx, fy
 
 def initialize(xlim, ylim, n):
+
+	# initialize positions and velocities of particles
 
 	sn = int(np.sqrt(n)+1)
 	r = 0.95
