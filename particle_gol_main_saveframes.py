@@ -18,11 +18,11 @@ colors = data[5]
 # set up figure
 
 plt.rcParams['axes.facecolor'] = '#000000'
-xres = 1600; yres = 900
+xres, yres = 1600, 900
 dpi = 72
 width = xres/dpi
 height = yres/dpi
-fig, ax  = plt.subplots(figsize = (width, height), facecolor = 'k', dpi = dpi)
+fig, ax = plt.subplots(figsize = (width, height), facecolor = 'k', dpi = dpi)
 ax.set_aspect('equal')
 ax.set_xlim(-xlim,xlim)
 ax.set_ylim(-ylim,ylim)
