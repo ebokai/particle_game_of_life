@@ -29,7 +29,7 @@ x,y = data[:2]
 colors = data[5]
 
 plt.rcParams['axes.facecolor'] = '#000000'
-xres = 1600; yres = 900
+xres, yres = 1600, 900
 dpi = 72
 width = xres/dpi
 height = yres/dpi
