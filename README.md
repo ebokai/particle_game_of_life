@@ -2,6 +2,14 @@ particle game of life
 
 simulations of particles with asymmetric attraction/repulsion
 
+dependencies:
+- moviepy
+- os
+- numpy
+- matplotlib
+- time
+- colorsys
+
 ----
 
   particle_gol_delete_frames.py: delete all rendered frames from output folder
