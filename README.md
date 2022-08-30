@@ -4,11 +4,13 @@ simulations of particles with asymmetric attraction/repulsion
 
 dependencies:
 - moviepy
-- os
+- colorsys
+
+standard libraries:
 - numpy
 - matplotlib
 - time
-- colorsys
+- os
 
 ----
 
