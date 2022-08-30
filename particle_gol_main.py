@@ -2,14 +2,15 @@ import particle_gol_sim as pgol_sim
 import particle_gol_params as pgol_params
 import particle_gol_functions as pgol_func
 
-
 import matplotlib.pyplot as plt 
 import matplotlib.animation as anim 
 import numpy as np
 from numpy.random import randint as rint
 
 def init():
-	particles.set_offsets([])
+	# quick fix because set_offsets requires a Nx2 array
+	x = np.zeros((1,2))
+	particles.set_offsets(x)
 	return particles,
 
 def animate(i):
