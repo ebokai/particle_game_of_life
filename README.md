@@ -3,10 +3,10 @@ particle game of life
 simulations of particles with asymmetric attraction/repulsion
 
 dependencies:
-- moviepy
+- moviepy (only for particle_gol_rander.py)
 - colorsys
 
-standard libraries:
+standard libraries (should be included with most python distributions):
 - numpy
 - matplotlib
 - time
