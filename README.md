@@ -14,6 +14,6 @@ simulations of particles with asymmetric attraction/repulsion
   
   particle_gol_params.py: simulation parameters - separate file to allow sharing of parameter values between ..main.py and ..main_saveframes.py
   
-  particle_gol_render.py: render frames to .mp4
+  particle_gol_render.py: render frames to .mp4. uses moviepy package
   
   particle_gol_sim.py: simulation - called by ..main.py and ..main_saveframes.py
