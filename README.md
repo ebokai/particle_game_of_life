@@ -4,6 +4,7 @@ simulations of particles with asymmetric attraction/repulsion
 
 # python
 new version (corresponding to this video: https://www.youtube.com/watch?v=P1H3MM56DDo)
+
 dependencies:
 - moviepy (only for particle_gol_rander.py)
 - colorsys
@@ -29,6 +30,9 @@ standard libraries (should be included with most python distributions):
   particle_gol_render.py: render frames to .mp4 (uses moviepy package)
   
   particle_gol_sim.py: simulation - called by ..main.py and ..main_saveframes.py
+
+old version (corresponding to this video: https://www.youtube.com/watch?v=-c5XaC5-DXg&t=1s)
+  /old/pgol_old.py 
   
 # C++
 to be added
