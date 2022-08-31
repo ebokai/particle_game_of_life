@@ -29,6 +29,6 @@ standard libraries (should be included with most python distributions):
   
   particle_gol_sim.py: simulation - called by ..main.py and ..main_saveframes.py
   
-# c++
+# C++
 to be added
   
