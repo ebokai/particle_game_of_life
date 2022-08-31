@@ -28,3 +28,7 @@ standard libraries (should be included with most python distributions):
   particle_gol_render.py: render frames to .mp4 (uses moviepy package)
   
   particle_gol_sim.py: simulation - called by ..main.py and ..main_saveframes.py
+  
+# c++
+to be added
+  
