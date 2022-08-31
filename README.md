@@ -2,6 +2,16 @@ particle game of life
 
 simulations of particles with asymmetric attraction/repulsion
 
+dependencies:
+- moviepy (only for particle_gol_rander.py)
+- colorsys
+
+standard libraries (should be included with most python distributions):
+- numpy
+- matplotlib
+- time
+- os
+
 ----
 
   particle_gol_delete_frames.py: delete all rendered frames from output folder
@@ -14,6 +24,6 @@ simulations of particles with asymmetric attraction/repulsion
   
   particle_gol_params.py: simulation parameters - separate file to allow sharing of parameter values between ..main.py and ..main_saveframes.py
   
-  particle_gol_render.py: render frames to .mp4
+  particle_gol_render.py: render frames to .mp4 (uses moviepy package)
   
   particle_gol_sim.py: simulation - called by ..main.py and ..main_saveframes.py
