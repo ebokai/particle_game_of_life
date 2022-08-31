@@ -33,7 +33,7 @@ standard libraries (should be included with most python distributions):
 
 ----
 
-old version (corresponding to this video: https://www.youtube.com/watch?v=-c5XaC5-DXg&t=1s)
+old version (corresponding to this video: https://www.youtube.com/watch?v=-c5XaC5-DXg)
 
   /old/pgol_old.py 
   
