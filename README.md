@@ -31,7 +31,10 @@ standard libraries (should be included with most python distributions):
   
   particle_gol_sim.py: simulation - called by ..main.py and ..main_saveframes.py
 
+----
+
 old version (corresponding to this video: https://www.youtube.com/watch?v=-c5XaC5-DXg&t=1s)
+
   /old/pgol_old.py 
   
 # C++
