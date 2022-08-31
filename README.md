@@ -2,6 +2,7 @@ particle game of life
 
 simulations of particles with asymmetric attraction/repulsion
 
+# python
 dependencies:
 - moviepy (only for particle_gol_rander.py)
 - colorsys
