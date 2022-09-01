@@ -38,5 +38,7 @@ old version (corresponding to this video: https://www.youtube.com/watch?v=-c5XaC
   /old/pgol_old.py 
   
 # C++
-to be added
+uses SDL2 
+
+compile using `g++ .\main.cpp -O3 -I .\SDL_x86_64\include\SDL2\ -L .\SDL2_x86_64\lib -lSDL2main -lSDL2 -o main.exe`
   
