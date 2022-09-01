@@ -235,7 +235,6 @@ public:
 
 
 			for (int i = 0; i < n; i++){
-				// converts position to integer
 				x = particles[i][0];
 				y = particles[i][1];
 				R = colors[i][0];
