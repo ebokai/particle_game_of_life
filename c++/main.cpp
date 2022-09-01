@@ -10,13 +10,13 @@ using namespace std;
 const float pi = 3.14159265f;
 const float pi_2 = 1.57079633f;
 
-const unsigned int n_groups = 10;
-const unsigned int pp_group = 300;
+const unsigned int n_groups = 8;
+const unsigned int pp_group = 250;
 const unsigned int n = n_groups * pp_group;
 
 const unsigned int DrawRadius = 2;
 const float dt = 0.02f;
-const float dRepel = pow(60,2); // square of desired repulsion distance
+const float dRepel = pow(30,2); // square of desired repulsion distance
 const float dForce = pow(250,2);
 const int FStrength = 20; // strength of force [-FStrength, FStrength]
 const float FMult = 0.025f; // additional multiplier (since low values of FStrength limit diversity)
@@ -394,8 +394,8 @@ int main(int argc, char *argv[]){
 
 	srand(time(NULL));
 
-	unsigned int width = 1440;
-	unsigned int height = 900;
+	unsigned int width = 1024;
+	unsigned int height = 768;
 
 	vector<vector<int>> forces(n, vector<int>(n));
 	vector<vector<float>> particles(n, vector<float>(4));
