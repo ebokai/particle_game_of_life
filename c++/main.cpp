@@ -11,10 +11,10 @@ const float pi = 3.14159265f;
 const float pi_2 = 1.57079633f;
 
 const unsigned int n_groups = 10;
-const unsigned int pp_group = 200;
+const unsigned int pp_group = 300;
 const unsigned int n = n_groups * pp_group;
 
-const unsigned int DrawRadius = 3;
+const unsigned int DrawRadius = 2;
 const float dt = 0.02f;
 const float dRepel = pow(60,2); // square of desired repulsion distance
 const float dForce = pow(250,2);
@@ -45,7 +45,24 @@ inline float atan_approx(float x){
 	return x * (a1 + xx * (a3 + xx * (a5 + xx * (a7 + xx * (a9 + xx * a11)))));
 }
 
-float atan2_fast(float y, float x){
+float fast_sin(float x){
+	float a3 = -0.16666667f;
+	float a5 = 0.00833333f;
+	float a7 = -0.00019841f;
+	float xx = x*x;
+	return x * (1.0f + xx * (a3 + xx * (a5 + xx * a7)));
+}
+
+float fast_cos(float x){
+	float a2 = -0.5f;
+	float a4 = 0.04166667f;
+	float a6 = -0.00138889f;
+	float a8 = 0.00002480f;
+	float xx = x*x;
+	return 1.0f + xx * (a2 + xx * (a4 + xx * (a6 + xx * a8)));
+}
+
+float fast_atan2(float y, float x){
 
 	bool swap = fabs(x) < fabs(y);
 	float atan_input = (swap ? x : y) / (swap ? y : x);
@@ -107,9 +124,9 @@ vector<vector<float>> friction(vector<vector<float>> particles){
 		vx = particles[i][2];
 		vy = particles[i][3];
 		v = fast_sqrt(vx*vx + vy*vy);		
-		a = atan2_fast(vy, vx);
-		particles[i][2] -= cos(a) * v * fs * dt;
-		particles[i][3] -= sin(a) * v * fs * dt;
+		a = fast_atan2(vy, vx);
+		particles[i][2] -= fast_cos(a) * v * fs * dt;
+		particles[i][3] -= fast_sin(a) * v * fs * dt;
 		
 
 	}
@@ -203,11 +220,11 @@ vector<vector<float>> repel(vector<vector<float>> particles, unsigned int width,
 			if (dR < dRepel) {
 
 				// only calculate if condition is met
-				a = atan2_fast(dy, dx);
+				a = fast_atan2(dy, dx);
 				dr = fast_sqrt(dR);
 				f = RStrength * (fast_sqrt(dRepel) - dr) / (dr + 1e-6f);
-				fx = f * cos(a);
-				fy = f * sin(a);
+				fx = f * fast_cos(a);
+				fy = f * fast_sin(a);
 
 				particles[i][2] += fx * dt;
 				particles[i][3] += fy * dt;
@@ -216,11 +233,11 @@ vector<vector<float>> repel(vector<vector<float>> particles, unsigned int width,
 			}
 
 			else if ((dR > dRepel) && (dR < dForce)) {
-				a = atan2_fast(dy, dx);
+				a = fast_atan2(dy, dx);
 				dr = fast_sqrt(dR);
 				f = FMult * forces[i][j] * (dr - fast_sqrt(dRepel));
-				fx = f * cos(a);
-				fy = f * sin(a);
+				fx = f * fast_cos(a);
+				fy = f * fast_sin(a);
 				particles[i][2] += fx * dt;
 				particles[i][3] += fy * dt;
 				particles[j][2] -= fx * dt;
@@ -284,14 +301,28 @@ public:
 			particles = update_position(particles);
 
 			// draw particles
-			for (unsigned int i = 0; i < n; i++){
-				x = particles[i][0];
-				y = particles[i][1];
-				R = colors[i][0];
-				G = colors[i][1];
-				B = colors[i][2];
-				draw_circle(x, y, DrawRadius, R, G, B);
-				// draw_circle_exp(x, y, R, G, B);
+			// for (unsigned int i = 0; i < n; i++){
+			// 	x = particles[i][0];
+			// 	y = particles[i][1];
+			// 	R = colors[i][0];
+			// 	G = colors[i][1];
+			// 	B = colors[i][2];
+			// 	draw_circle(x, y, DrawRadius, R, G, B);
+			// 	// draw_circle_exp(x, y, R, G, B);
+			// }
+
+			for(unsigned int i = 0; i < n_groups; i++){
+				R = colors[i*pp_group][0];
+				G = colors[i*pp_group][1];
+				B = colors[i*pp_group][2];
+				SDL_SetRenderDrawColor(renderer, R, G, B, 255);
+				for(unsigned int j = 0; j < pp_group; j++){
+					unsigned int k = i*pp_group + j;
+					x = particles[k][0];
+					y = particles[k][1];
+					draw_circle(x, y, DrawRadius);
+
+				}
 			}
 
 
@@ -309,11 +340,15 @@ public:
 	}
 
 	// draw circular particle 
-	void draw_circle(float X, float Y, int radius, unsigned int R, unsigned int G, unsigned int B){
-		SDL_SetRenderDrawColor(renderer, R, G, B, 255);
+	void draw_circle(float X, float Y, int radius){
+		// SDL_SetRenderDrawColor(renderer, R, G, B, 255);
 		for (int x = X-radius; x <= X+radius; x++){
 			for (int y = Y-radius; y <= Y+radius; y++){
-				if((pow(X-x,2) + pow(Y-y,2)) <= pow(radius,2)){
+
+				float X2 = (X*X) - 2 * (x*X) + (x*x);
+				float Y2 = (Y*Y) - 2 * (y*Y) + (y*y);
+
+				if((X2 + Y2) <= (radius*radius)){
 					SDL_RenderDrawPoint(renderer, x, y);
 				}
 			}
