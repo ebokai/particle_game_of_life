@@ -8,18 +8,18 @@
 using namespace std;
 
 
-const int n_groups = 10;
-const int pp_group = 180;
+const int n_groups = 12;
+const int pp_group = 150;
 const int n = n_groups * pp_group;
 
 const int DrawRadius = 2;
-const double dt = 0.004;
-const double dRepel = pow(20,2); // square of desired repulsion distance
-const double dForce = pow(100,2);
+const double dt = 0.02;
+const double dRepel = pow(30,2); // square of desired repulsion distance
+const double dForce = pow(140,2);
 const int FStrength = 10; // strength of force [-FStrength, FStrength]
-const double FMult = 0.15; // additional multiplier (since low values of FStrength limit diversity)
+const double FMult = 0.05; // additional multiplier (since low values of FStrength limit diversity)
 const int RStrength = 200;
-const double fs = 1.25;
+const double fs = 0.5;
 
 // FUNCTIONS ====================================
 vector<vector<double>> initialize_particles(vector<vector<double>> particles, int width, int height){
@@ -71,10 +71,12 @@ vector<vector<double>> friction(vector<vector<double>> particles){
 		vx = particles[i][2];
 		vy = particles[i][3];
 		v = sqrt(vx*vx + vy*vy);
-		a = atan2(vy, vx);
 
-		particles[i][2] -= cos(a) * v * fs * dt;
-		particles[i][3] -= sin(a) * v * fs * dt;
+		if (v > 2){
+			a = atan2(vy, vx);
+			particles[i][2] -= cos(a) * v * fs * dt;
+			particles[i][3] -= sin(a) * v * fs * dt;
+		}
 
 	}
 
@@ -246,7 +248,7 @@ public:
 			SDL_RenderPresent(renderer);
 			Uint64 end = SDL_GetPerformanceCounter();
 			secs = (end - start) / (float) SDL_GetPerformanceFrequency();
-			cout << (1.0f) / secs << endl;
+			// cout << (1.0f) / secs << endl;
 			//SDL_Delay(floor(16.666f - 1000.0f * secs)); // cap to 60 FPS
 			
 		}
