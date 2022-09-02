@@ -332,9 +332,11 @@ public:
 			SDL_PollEvent(&event);
 			if(event.type == SDL_QUIT) return;
 			SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0);
-			SDL_RenderClear(renderer);
+			SDL_RenderClear(renderer); // comment this out to get particle trails
 
 			// simulation functions
+
+			// can play around with the order of these functions
 			particles = friction(particles, n, fs, dt);
 			particles = bound(particles, width, height, n);
 			particles = repel(particles, forces, width, height, n, RStrength, dRepel, dForce, FMult, dt);
