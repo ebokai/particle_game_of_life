@@ -188,7 +188,8 @@ vector<vector<float>> repel(
 	float dt) {
 
 	float x1, x2, y1, y2, dx, dy, dr, a, fx, fy, dR;
-	float f = 0.0f;
+	float f12 = 0.0f;
+	float f21 = 0.0f;
 
 	for (unsigned int i = 0; i < n; i++){
 		
@@ -197,7 +198,8 @@ vector<vector<float>> repel(
 		
 		for (unsigned int j = i + 1; j < n; j++){
 
-			f = 0.0f;
+			f12 = 0.0f;
+			f21 = 0.0f;
 		
 			x2 = particles[j][0];
 			y2 = particles[j][1];
@@ -215,9 +217,9 @@ vector<vector<float>> repel(
 				// only calculate if condition is met
 				a = fast_atan2(dy, dx);
 				dr = fast_sqrt(dR);
-				f = RStrength * (fast_sqrt(dRepel) - dr) / (dr + 1e-6f);
-				fx = f * fast_cos(a);
-				fy = f * fast_sin(a);
+				f12 = RStrength * (fast_sqrt(dRepel) - dr) / (dr + 1e-6f);
+				fx = f12 * fast_cos(a);
+				fy = f12 * fast_sin(a);
 
 				particles[i][2] += fx * dt;
 				particles[i][3] += fy * dt;
@@ -228,11 +230,16 @@ vector<vector<float>> repel(
 			else if ((dR > dRepel) && (dR < dForce/2)) {
 				a = fast_atan2(dy, dx);
 				dr = fast_sqrt(dR);
-				f = FMult * forces[i][j] * (dr - fast_sqrt(dRepel));
-				fx = f * fast_cos(a);
-				fy = f * fast_sin(a);
+
+				f12 = FMult * forces[i][j] * (dr - fast_sqrt(dRepel));
+				fx = f12 * fast_cos(a);
+				fy = f12 * fast_sin(a);
 				particles[i][2] += fx * dt;
 				particles[i][3] += fy * dt;
+
+				f21 = FMult * forces[j][i] * (dr - fast_sqrt(dRepel));
+				fx = f21 * fast_cos(a);
+				fy = f21 * fast_sin(a);
 				particles[j][2] -= fx * dt;
 				particles[j][3] -= fy * dt;
 			}
@@ -240,11 +247,16 @@ vector<vector<float>> repel(
 			else if ((dR > dForce/2) && (dR < dForce)) {
 				a = fast_atan2(dy, dx);
 				dr = fast_sqrt(dR);
-				f = FMult * forces[i][j] * (fast_sqrt(dForce) - dr);
-				fx = f * fast_cos(a);
-				fy = f * fast_sin(a);
+
+				f12 = FMult * forces[i][j] * (fast_sqrt(dForce) - dr);
+				fx = f12 * fast_cos(a);
+				fy = f12 * fast_sin(a);
 				particles[i][2] += fx * dt;
 				particles[i][3] += fy * dt;
+
+				f21 = FMult * forces[j][i] * (fast_sqrt(dForce) - dr);
+				fx = f21 * fast_cos(a);
+				fy = f21 * fast_sin(a);
 				particles[j][2] -= fx * dt;
 				particles[j][3] -= fy * dt;
 			}
@@ -286,16 +298,16 @@ public:
 		unsigned int n_groups,
 		unsigned int pp_group){
 
-		int dr = 1 + rand() / (RAND_MAX/100);
-		int df = dr + rand() / (RAND_MAX/400);
+		int dr = 30 + rand() / (RAND_MAX/50);
+		int df = dr + rand() / (RAND_MAX/200);
 
 		const float dt = 0.01f;
 		const float dRepel = pow(dr,2); // 30
 		const float dForce = pow(df,2); // 200
 		//const float fs = 10.0f; // friction strength 
 
-		const float fs = static_cast <float> (rand()) / static_cast <float> (RAND_MAX/5);
-		const unsigned int RStrength = 1 + rand() / (RAND_MAX/600); // 400
+		const float fs = static_cast <float> (rand()) / static_cast <float> (RAND_MAX/20);
+		const unsigned int RStrength = 1 + rand() / (RAND_MAX/400); // 400
 		const float FMult = static_cast <float> (rand()) / static_cast <float> (RAND_MAX);
 		const unsigned int DrawRadius = 2;
 
@@ -411,7 +423,7 @@ int main(int argc, char *argv[]){
 	const unsigned int n_groups = 1 + rand() / (RAND_MAX/30);
 	const unsigned int pp_group = n_target / n_groups;
 	const unsigned int n = n_groups * pp_group;
-	const int FStrength = rand() / (RAND_MAX/200); // 20
+	const int FStrength = rand() / (RAND_MAX/50); // 20
 
 	cout << n_groups << " groups of " << pp_group << " particles" << endl;
 	cout << n << " total particles" << endl;
