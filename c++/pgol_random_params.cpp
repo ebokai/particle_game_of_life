@@ -279,6 +279,7 @@ public:
 		SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0);
 		SDL_RenderClear(renderer);
 		SDL_RenderPresent(renderer);
+		// SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND); // enables alpha blending
 
 	}
 
@@ -308,7 +309,7 @@ public:
 		const float fs = static_cast <float> (rand()) / static_cast <float> (RAND_MAX/20); // friction strength
 		const unsigned int RStrength = 1 + rand() / (RAND_MAX/400); // repulsion strength
 		const float FMult = static_cast <float> (rand()) / static_cast <float> (RAND_MAX); // force multiplier
-		const unsigned int DrawRadius = 2; // particle size
+		const unsigned int DrawRadius = 1; // particle size
 
 		cout << "Repel strength: " << RStrength << endl;
 		cout << "Force distance: " << df << endl;
