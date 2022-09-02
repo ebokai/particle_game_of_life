@@ -10,7 +10,7 @@ using namespace std;
 const float pi = 3.14159265f;
 const float pi_2 = 1.57079633f;
 
-const unsigned int n_groups = 8;
+const unsigned int n_groups = 6;
 const unsigned int pp_group = 250;
 const unsigned int n = n_groups * pp_group;
 
@@ -240,6 +240,10 @@ vector<vector<float>> repel(vector<vector<float>> particles, unsigned int width,
 				fy = f * fast_sin(a);
 				particles[i][2] += fx * dt;
 				particles[i][3] += fy * dt;
+
+				f = FMult * forces[j][i] * (dr - fast_sqrt(dRepel));
+				fx = f * fast_cos(a);
+				fy = f * fast_sin(a);
 				particles[j][2] -= fx * dt;
 				particles[j][3] -= fy * dt;
 			}
@@ -394,8 +398,8 @@ int main(int argc, char *argv[]){
 
 	srand(time(NULL));
 
-	unsigned int width = 1024;
-	unsigned int height = 768;
+	unsigned int width = 1600;
+	unsigned int height = 900;
 
 	vector<vector<int>> forces(n, vector<int>(n));
 	vector<vector<float>> particles(n, vector<float>(4));

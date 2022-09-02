@@ -419,7 +419,7 @@ int main(int argc, char *argv[]){
 	srand(time(NULL));
 
 	// number of particles
-	const unsigned int n_target = 2000;
+	const unsigned int n_target = 1500;
 	const unsigned int n_groups = 1 + rand() / (RAND_MAX/30);
 	const unsigned int pp_group = n_target / n_groups;
 	const unsigned int n = n_groups * pp_group;
