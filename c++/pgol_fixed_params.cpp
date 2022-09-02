@@ -305,15 +305,6 @@ public:
 			particles = update_position(particles);
 
 			// draw particles
-			// for (unsigned int i = 0; i < n; i++){
-			// 	x = particles[i][0];
-			// 	y = particles[i][1];
-			// 	R = colors[i][0];
-			// 	G = colors[i][1];
-			// 	B = colors[i][2];
-			// 	draw_circle(x, y, DrawRadius, R, G, B);
-			// 	// draw_circle_exp(x, y, R, G, B);
-			// }
 
 			for(unsigned int i = 0; i < n_groups; i++){
 				R = colors[i*pp_group][0];
@@ -325,7 +316,6 @@ public:
 					x = particles[k][0];
 					y = particles[k][1];
 					draw_circle(x, y, DrawRadius);
-
 				}
 			}
 
@@ -357,32 +347,7 @@ public:
 				}
 			}
 		}
-
 	}
-
-	void draw_circle_exp(float X, float Y, unsigned int R, unsigned int G, unsigned int B){
-		SDL_SetRenderDrawColor(renderer, R, G, B, 255);
-		int x = X;
-		int y = Y;
-		SDL_RenderDrawPoint(renderer, x, y);
-		SDL_RenderDrawPoint(renderer, x+1, y);
-		SDL_RenderDrawPoint(renderer, x-1, y);
-		SDL_RenderDrawPoint(renderer, x, y+1);
-		SDL_RenderDrawPoint(renderer, x, y-1);
-		SDL_RenderDrawPoint(renderer, x+2, y);
-		SDL_RenderDrawPoint(renderer, x-2, y);
-		SDL_RenderDrawPoint(renderer, x, y+2);
-		SDL_RenderDrawPoint(renderer, x, y-2);
-		SDL_RenderDrawPoint(renderer, x+1, y+1);
-		SDL_RenderDrawPoint(renderer, x+1, y-1);
-		SDL_RenderDrawPoint(renderer, x-1, y+1);
-		SDL_RenderDrawPoint(renderer, x-1, y-1);
-
-
-
-	}
-
-
 
 private:
 	unsigned int width;

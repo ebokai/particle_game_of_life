@@ -298,18 +298,17 @@ public:
 		unsigned int n_groups,
 		unsigned int pp_group){
 
-		int dr = 30 + rand() / (RAND_MAX/50);
-		int df = dr + rand() / (RAND_MAX/200);
+		int dr = 30 + rand() / (RAND_MAX/50); // repulsion distance
+		int df = dr + rand() / (RAND_MAX/200); // force distance 
 
-		const float dt = 0.01f;
-		const float dRepel = pow(dr,2); // 30
-		const float dForce = pow(df,2); // 200
-		//const float fs = 10.0f; // friction strength 
+		const float dt = 0.01f; // timestep
+		const float dRepel = pow(dr,2); // square of repulsion distance
+		const float dForce = pow(df,2); // square of force distance 
 
-		const float fs = static_cast <float> (rand()) / static_cast <float> (RAND_MAX/20);
-		const unsigned int RStrength = 1 + rand() / (RAND_MAX/400); // 400
-		const float FMult = static_cast <float> (rand()) / static_cast <float> (RAND_MAX);
-		const unsigned int DrawRadius = 2;
+		const float fs = static_cast <float> (rand()) / static_cast <float> (RAND_MAX/20); // friction strength
+		const unsigned int RStrength = 1 + rand() / (RAND_MAX/400); // repulsion strength
+		const float FMult = static_cast <float> (rand()) / static_cast <float> (RAND_MAX); // force multiplier
+		const unsigned int DrawRadius = 2; // particle size
 
 		cout << "Repel strength: " << RStrength << endl;
 		cout << "Force distance: " << df << endl;
@@ -320,11 +319,11 @@ public:
 		float x, y;
 		unsigned int R, G, B;
 		SDL_Event event;
-		float secs;
-		float fps;
+
+		float secs, fps;
 		float tot_fps = 0;
 
-		unsigned frame = 0;
+		unsigned int frame = 0;
 
 		while (!(event.type == SDL_QUIT)){
 			Uint64 start = SDL_GetPerformanceCounter();
@@ -419,7 +418,7 @@ int main(int argc, char *argv[]){
 	srand(time(NULL));
 
 	// number of particles
-	const unsigned int n_target = 1500;
+	const unsigned int n_target = 1600;
 	const unsigned int n_groups = 1 + rand() / (RAND_MAX/30);
 	const unsigned int pp_group = n_target / n_groups;
 	const unsigned int n = n_groups * pp_group;
