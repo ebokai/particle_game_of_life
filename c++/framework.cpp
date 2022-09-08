@@ -75,7 +75,7 @@ void Framework::initialize(int n_groups, int pp_group){
 		unsigned int G = rand() / (RAND_MAX/255);
 		unsigned int B = rand() / (RAND_MAX/255);
 		
-		for (int j = 0; j < pp_group; j++){s
+		for (int j = 0; j < pp_group; j++){
 			int k = i * pp_group + j;
 			particles.push_back(Particle());
 			particles[k].p_ID = k;
@@ -97,6 +97,9 @@ void Framework::initialize(int n_groups, int pp_group){
 			for(unsigned int k = i * pp_group; k < (i+1) * pp_group; k++){
 				for(unsigned int l = j * pp_group; l < (j+1) * pp_group; l++){
 					new_forces[k][l] = force;
+					if (k == l){
+						new_forces[k][l] = 0;
+					}
 				}
 			}
 		}

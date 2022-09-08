@@ -24,7 +24,7 @@ public:
 	Framework(int n_, unsigned int width_, unsigned int height_);
 	~Framework();
 	
-	int get_cell_ID(float x, float y, int size);
+	int get_cell_ID(float x, float y);
 	float dbound(float d, int lim);
 	
 	void make_hash_table();

@@ -51,10 +51,10 @@ float fast_atan2(float y, float x){
 }
 
 // FRAMEWORK METHODS =====
-int Framework::get_cell_ID(float x, float y, int size){
-	int xs = int(x/size);
-	int ys = int(y/size);
-	int ws = int(width/size);
+int Framework::get_cell_ID(float x, float y){
+	int xs = int(x/cell_size);
+	int ys = int(y/cell_size);
+	int ws = int(width/cell_size);
 	return xs + ys * ws;
 }
 
@@ -65,7 +65,7 @@ void Framework::make_hash_table(){
 		Particle p = particles[i];
 		x = p.x;
 		y = p.y;
-		int cell_ID = get_cell_ID(x, y, cell_size);
+		int cell_ID = get_cell_ID(x, y);
 		new_table[cell_ID].push_back(p.p_ID);
 	}
 	hash_table = new_table; // update hash_table
