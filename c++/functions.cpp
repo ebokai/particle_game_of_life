@@ -1,4 +1,5 @@
 #include <immintrin.h>
+#include "pgol.h"
 
 float fast_rsqrt(float x){
 	// fast reciprocal square root

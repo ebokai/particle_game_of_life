@@ -1,6 +1,6 @@
 #define SDL_MAIN_HANDLED
 
-#include "framework.h"
+#include "pgol.h"
 
 int main(int argc, char *argv[]){
 

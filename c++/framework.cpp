@@ -1,6 +1,7 @@
-#include "framework.h"
 #include <time.h>
 #include <iostream>
+
+#include "pgol.h"
 
 Framework::Framework(int n_, unsigned int width_, unsigned int height_): n(n_), width(width_), height(height_){
 	SDL_Init(SDL_INIT_VIDEO);
@@ -26,7 +27,7 @@ void Framework::main_loop(){
 		SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0);
 		SDL_RenderClear(renderer);
 
-		SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);=
+		SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
 		for(int i = 0; i < n; i++){
 			SDL_RenderDrawPoint(renderer, particles[i].x, particles[i].y);
 		}

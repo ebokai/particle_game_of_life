@@ -1,7 +1,14 @@
 #include <SDL.h>
 #include <vector>
-#include "particles.h"
+
 using namespace std;
+
+
+struct Particle{
+	float x, y;
+	float vx, vy;
+	unsigned int p_ID;
+};
 
 class Framework{
 public:
@@ -17,3 +24,6 @@ private:
 	SDL_Window *window = NULL;
 	SDL_Renderer *renderer = NULL;
 };
+
+float fast_rsqrt(float x);
+float fast_sqrt(float x);
