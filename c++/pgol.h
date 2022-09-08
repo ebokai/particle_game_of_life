@@ -39,7 +39,7 @@ private:
 	float dt = 0.01;
 	unsigned int width;
 	unsigned int height;
-	unsigned int cell_size = 150;
+	unsigned int cell_size = 100;
 
 	vector<Particle> particles;
 	vector<vector<int>> forces;
