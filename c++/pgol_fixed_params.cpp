@@ -222,9 +222,9 @@ vector<vector<float>> repel(vector<vector<float>> particles, unsigned int width,
 				// only calculate if condition is met
 				a = fast_atan2(dy, dx);
 				dr = fast_sqrt(dR);
-				f = RStrength * (fast_sqrt(dRepel) - dr) / (dr + 1e-6f);
-				fx = f * fast_cos(a);
-				fy = f * fast_sin(a);
+				f12 = RStrength * (fast_sqrt(dRepel) - dr) / (dr + 1e-6f);
+				fx = f12 * fast_cos(a);
+				fy = f12 * fast_sin(a);
 
 				particles[i][2] += fx * dt;
 				particles[i][3] += fy * dt;
@@ -232,22 +232,39 @@ vector<vector<float>> repel(vector<vector<float>> particles, unsigned int width,
 				particles[j][3] -= fy * dt;
 			}
 
-			else if ((dR > dRepel) && (dR < dForce)) {
+			else if ((dR > dRepel) && (dR < dForce/2)) {
 				a = fast_atan2(dy, dx);
 				dr = fast_sqrt(dR);
-				f = FMult * forces[i][j] * (dr - fast_sqrt(dRepel));
-				fx = f * fast_cos(a);
-				fy = f * fast_sin(a);
+
+				f12 = FMult * forces[i][j] * (dr - fast_sqrt(dRepel));
+				fx = f12 * fast_cos(a);
+				fy = f12 * fast_sin(a);
 				particles[i][2] += fx * dt;
 				particles[i][3] += fy * dt;
 
-				f = FMult * forces[j][i] * (dr - fast_sqrt(dRepel));
-				fx = f * fast_cos(a);
-				fy = f * fast_sin(a);
+				f21 = FMult * forces[j][i] * (dr - fast_sqrt(dRepel));
+				fx = f21 * fast_cos(a);
+				fy = f21 * fast_sin(a);
 				particles[j][2] -= fx * dt;
 				particles[j][3] -= fy * dt;
 			}
 
+			else if ((dR > dForce/2) && (dR < dForce)) {
+				a = fast_atan2(dy, dx);
+				dr = fast_sqrt(dR);
+
+				f12 = FMult * forces[i][j] * (fast_sqrt(dForce) - dr);
+				fx = f12 * fast_cos(a);
+				fy = f12 * fast_sin(a);
+				particles[i][2] += fx * dt;
+				particles[i][3] += fy * dt;
+
+				f21 = FMult * forces[j][i] * (fast_sqrt(dForce) - dr);
+				fx = f21 * fast_cos(a);
+				fy = f21 * fast_sin(a);
+				particles[j][2] -= fx * dt;
+				particles[j][3] -= fy * dt;
+			}
 		}
 	}
 

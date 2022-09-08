@@ -334,7 +334,7 @@ public:
 			SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0);
 			SDL_RenderClear(renderer); // comment this out to get particle trails
 
-			// simulation functions
+			// simulation functions =======================
 
 			// can play around with the order of these functions
 			particles = friction(particles, n, fs, dt);
@@ -342,7 +342,7 @@ public:
 			particles = repel(particles, forces, width, height, n, RStrength, dRepel, dForce, FMult, dt);
 			particles = update_position(particles, n, dt);
 
-			// draw particles
+			// draw particles =============================
 			for(unsigned int i = 0; i < n_groups; i++){
 				R = colors[i*pp_group][0];
 				G = colors[i*pp_group][1];
@@ -429,8 +429,6 @@ int main(int argc, char *argv[]){
 
 	cout << n_groups << " groups of " << pp_group << " particles" << endl;
 	cout << n << " total particles" << endl;
-	
-
 	cout << "Force strength: " << FStrength << endl;
 
 	unsigned int width = 1600;
