@@ -37,7 +37,7 @@ void Framework::main_loop(){
 		SDL_RenderClear(renderer);
 
 		// SIMULATION UPDATES =====
-		interact();
+		interact_test();
 		friction();
 		update_and_bound();
 		make_hash_table();

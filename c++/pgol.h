@@ -30,6 +30,7 @@ public:
 	void make_hash_table();
 	void update_and_bound();
 	void interact();
+	void interact_test();
 	void friction();
 	void initialize(int n_groups, int pp_group);
 	void main_loop();
@@ -56,3 +57,4 @@ float atan_approx(float x);
 float fast_sin(float x);
 float fast_cos(float x);
 float fast_atan2(float y, float x);
+float xbound(float x, int lim);

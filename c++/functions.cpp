@@ -50,6 +50,17 @@ float fast_atan2(float y, float x){
 	return res;
 }
 
+float xbound(float x, int lim){
+	if (x > lim){
+		x = x - lim;
+	}
+	if (x < 0){
+		x = x + lim;
+	}
+
+	return x;
+}
+
 // FRAMEWORK METHODS =====
 int Framework::get_cell_ID(float x, float y){
 	int xs = int(x/cell_size);
@@ -183,7 +194,7 @@ float Framework::dbound(float d, int lim){
 }
 
 void Framework::friction(){
-	float fs = 1;
+	float fs = 5;
 	for (int i = 0; i < n; i++){
 		float v = fast_sqrt(particles[i].vx * particles[i].vx + particles[i].vy * particles[i].vy);
 		float a = fast_atan2(particles[i].vy, particles[i].vx);
@@ -191,4 +202,121 @@ void Framework::friction(){
 		particles[i].vy -= fast_sin(a) * v * fs * dt;
 	}
 }
+
+
+void Framework::interact_test(){
+
+
+
+	int n_cells = get_cell_ID(width, height-1);
+
+	float dx, dy, dr, dR;
+	float f, fx, fy, a;
+
+	for (int i = 0; i < n_cells; i++){
+
+		// CHECK CENTER CELL FOR PARTICLES
+
+		vector<int> this_cell = hash_table[i];
+
+		int n_this = this_cell.size();
+
+
+
+		if (n_this > 0){
+
+			// FIND NEIGHBOURS USING REFERENCE PARTICLE
+			int p_id = this_cell[0];
+			Particle p_ref = particles[p_id];
+
+			int neighbours[9];
+
+			neighbours[0] = i;
+			neighbours[1] = get_cell_ID(xbound(p_ref.x-cell_size, width), xbound(p_ref.y+cell_size, height));
+			neighbours[2] = get_cell_ID(xbound(p_ref.x, width), xbound(p_ref.y+cell_size, height));
+			neighbours[3] = get_cell_ID(xbound(p_ref.x+cell_size, width), xbound(p_ref.y+cell_size, height));
+			neighbours[4] = get_cell_ID(xbound(p_ref.x-cell_size, width), xbound(p_ref.y, height));
+			neighbours[5] = get_cell_ID(xbound(p_ref.x+cell_size, width), xbound(p_ref.y, height));
+			neighbours[6] = get_cell_ID(xbound(p_ref.x-cell_size, width), xbound(p_ref.y-cell_size, height));
+			neighbours[7] = get_cell_ID(xbound(p_ref.x, width), xbound(p_ref.y-cell_size, height));
+			neighbours[8] = get_cell_ID(xbound(p_ref.x+cell_size, width), xbound(p_ref.y-cell_size, height));
+
+			for (int j = 0; j < 9; j++){
+
+				// LOOP OVER ADJACENT CELLS
+				int that_cell_id = neighbours[j];
+				vector<int> that_cell = hash_table[that_cell_id];
+				int n_that = that_cell.size();
+
+
+
+				if (n_that > 0){
+					for(int i1 = 0; i1 < n_this; i1++){
+
+						int p1_ID = this_cell[i1];
+						Particle p1 = particles[p1_ID];
+						
+						for(int i2 = 0; i2 < n_that; i2++){
+							
+							int p2_ID = that_cell[i2];
+
+							if (p1_ID != p2_ID){
+
+
+							
+								Particle p2 = particles[p2_ID];
+
+	
+
+								f = 0;
+
+								dx = dbound(p1.x - p2.x, width);
+								dy = dbound(p1.y - p2.y, height); 
+
+								dR = dx*dx + dy*dy;
+
+								if ((dR > 0) && (dR < 900)){
+									a = fast_atan2(dy, dx);
+									dr = fast_sqrt(dR);
+									f = 100 * (30 - dr) / (dr + 1);
+									fx = f * fast_cos(a);
+									fy = f * fast_sin(a);
+									p1.vx += fx * dt;
+									p1.vy += fy * dt;
+
+
+
+								}
+
+								if ((dR > 900) && (dR < 2500)) {
+									a = fast_atan2(dy, dx);
+									dr = fast_sqrt(dR);
+									f = forces[p1_ID][p2_ID] * (dr - 30);
+									fx = f * fast_cos(a);
+									fy = f * fast_sin(a);
+									p1.vx += fx * dt;
+									p1.vy += fy * dt;		
+
+						
+								}
+							}
+
+
+						}
+
+						particles[p1_ID] = p1;
+					}
+				}
+
+
+			}
+
+
+
+
+		}
+	}
+}
+
+
 
