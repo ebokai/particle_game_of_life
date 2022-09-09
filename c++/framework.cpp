@@ -37,10 +37,14 @@ void Framework::main_loop(){
 		SDL_RenderClear(renderer);
 
 		// SIMULATION UPDATES =====
-		interact_test();
+		interact();
 		friction();
 		update_and_bound();
-		make_hash_table();
+
+		if (frame % 5 == 0){
+			make_hash_table();
+		}
+		
 
 		// DRAW PARTICLES =====
 		for(int i = 0; i < n; i++){

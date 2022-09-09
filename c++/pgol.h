@@ -30,7 +30,6 @@ public:
 	void make_hash_table();
 	void update_and_bound();
 	void interact();
-	void interact_test();
 	void friction();
 	void initialize(int n_groups, int pp_group);
 	void main_loop();

@@ -103,85 +103,7 @@ void Framework::update_and_bound(){
 	}
 }
 
-void Framework::interact(){
 
-	// TODO: LOOP OVER NEIGHBOURING CELLS
-
-	map<int, vector<int>>::iterator it;
-
-	float dx, dy, dr, dR, f, fx, fy, a;
-	Particle p1, p2;
-
-	for (it = hash_table.begin(); it != hash_table.end(); it++){
-
-		int this_cell = it->first;
-
-		vector<int> cell_particles = it->second;
-		
-		int n_particles = cell_particles.size();
-
-		if (n_particles > 0){
-		
-			for (int i = 0; i < n_particles; i++){
-
-				int ii = cell_particles[i];
-
-				p1 = particles[ii];
-				
-				for (int j = i + 1; j < n_particles; j++){
-
-					f = 0;
-
-					int jj = cell_particles[j];
-				
-					p2 = particles[jj];
-
-					dx = p1.x - p2.x;
-					dy = p1.y - p2.y;
-
-					dx = dbound(dx, width);
-					dy = dbound(dy, height);
-
-					dR = dx * dx + dy * dy; 
-
-					if (dR < 400){
-						a = fast_atan2(dy, dx);
-						dr = fast_sqrt(dR);
-						f = 50 * (20 - dr) / (dr + 1);
-
-						fx = f * fast_cos(a);
-						fy = f * fast_sin(a);
-
-						p1.vx += fx * dt;
-						p1.vy += fy * dt;
-						p2.vx -= fx * dt;
-						p2.vy -= fy * dt;
-					}
-
-					if ((dR > 400) && (dR < 900)) {
-
-						a = fast_atan2(dy, dx);
-						dr = fast_sqrt(dR);
-
-						f = forces[ii][jj] * (dr - 20);
-						fx = f * fast_cos(a);
-						fy = f * fast_sin(a);
-						p1.vx += fx * dt;
-						p1.vy += fy * dt;
-
-						f = forces[jj][ii] * (dr - 20);
-						fx = f * fast_cos(a);
-						fy = f * fast_sin(a);
-						p2.vx -= fx * dt;
-						p2.vy -= fy * dt;
-					}
-					particles[cell_particles[j]] = p2;
-				}
-				particles[cell_particles[i]] = p1;
-			}
-		}
-	}
-}
 
 float Framework::dbound(float d, int lim){
 	if (d > lim/2){
@@ -204,9 +126,7 @@ void Framework::friction(){
 }
 
 
-void Framework::interact_test(){
-
-
+void Framework::interact(){
 
 	int n_cells = get_cell_ID(width, height-1);
 
@@ -220,8 +140,6 @@ void Framework::interact_test(){
 		vector<int> this_cell = hash_table[i];
 
 		int n_this = this_cell.size();
-
-
 
 		if (n_this > 0){
 
@@ -248,8 +166,6 @@ void Framework::interact_test(){
 				vector<int> that_cell = hash_table[that_cell_id];
 				int n_that = that_cell.size();
 
-
-
 				if (n_that > 0){
 					for(int i1 = 0; i1 < n_this; i1++){
 
@@ -261,7 +177,6 @@ void Framework::interact_test(){
 							int p2_ID = that_cell[i2];
 
 							if (p1_ID != p2_ID){
-
 
 								Particle p2 = particles[p2_ID];
 
@@ -291,20 +206,11 @@ void Framework::interact_test(){
 									p1.vy += fy * dt;							
 								}
 							}
-
-
 						}
-
 						particles[p1_ID] = p1;
 					}
 				}
-
-
 			}
-
-
-
-
 		}
 	}
 }
