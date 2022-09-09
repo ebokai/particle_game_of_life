@@ -263,10 +263,7 @@ void Framework::interact_test(){
 							if (p1_ID != p2_ID){
 
 
-							
 								Particle p2 = particles[p2_ID];
-
-	
 
 								f = 0;
 
@@ -283,11 +280,7 @@ void Framework::interact_test(){
 									fy = f * fast_sin(a);
 									p1.vx += fx * dt;
 									p1.vy += fy * dt;
-
-
-
 								}
-
 								if ((dR > 900) && (dR < 2500)) {
 									a = fast_atan2(dy, dx);
 									dr = fast_sqrt(dR);
@@ -295,9 +288,7 @@ void Framework::interact_test(){
 									fx = f * fast_cos(a);
 									fy = f * fast_sin(a);
 									p1.vx += fx * dt;
-									p1.vy += fy * dt;		
-
-						
+									p1.vy += fy * dt;							
 								}
 							}
 
