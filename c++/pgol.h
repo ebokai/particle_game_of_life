@@ -24,7 +24,7 @@ public:
 	Framework(unsigned int width_, unsigned int height_);
 	~Framework();
 	
-	int get_cell_ID(float x, float y);
+	unsigned int get_cell_ID(float x, float y);
 	float dbound(float d, int lim);
 	
 	void make_hash_table();
@@ -38,19 +38,21 @@ private:
 	float dt = 0.01;
 	unsigned int width;
 	unsigned int height;
-	unsigned int cell_size = 100;
 
-	int n_target = 5000;
-	int n_groups = 10;
-	int pp_group = n_target / n_groups;
-	int n = n_groups * pp_group;
+	// performance parameters
+	unsigned int cell_size = 100;
+	unsigned int n_target = 5000;
+	unsigned int n_groups = 10;
+	unsigned int pp_group = n_target / n_groups;
+	unsigned int n = n_groups * pp_group;
+	unsigned int max_interactions = 40;
 
 	// simulation parameters
 	float dRepel = 30;
 	float dRepelSq = dRepel * dRepel;
 	float repel_strength = 400;
 
-	float dForce = 60;
+	float dForce = 70;
 	float dForceSq = dForce * dForce;
 
 	float friction_strength = 10;
@@ -58,7 +60,7 @@ private:
 	// containers
 	vector<Particle> particles;
 	vector<vector<int>> forces;
-	map<int, vector<int>> hash_table;
+	map<unsigned int, vector<unsigned int>> hash_table;
 
 	// SDL objects
 	SDL_Window *window = NULL;
@@ -72,4 +74,4 @@ float atan_approx(float x);
 float fast_sin(float x);
 float fast_cos(float x);
 float fast_atan2(float y, float x);
-float xbound(float x, int lim);
+float xbound(float x, unsigned int lim);

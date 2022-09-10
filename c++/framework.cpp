@@ -43,7 +43,7 @@ void Framework::main_loop(){
 		make_hash_table();		
 
 		// DRAW PARTICLES =====
-		for(int i = 0; i < n; i++){
+		for(unsigned int i = 0; i < n; i++){
 			SDL_SetRenderDrawColor(renderer, particles[i].R, particles[i].G, particles[i].B, 255);
 
 			for (int x = particles[i].x-2; x <= particles[i].x+2; x++){
@@ -75,15 +75,15 @@ void Framework::initialize(){
 	srand(time(NULL));
 
 	// INITIALIZE PARTICLES 
-	for (int i = 0; i < n_groups; i++){
+	for (unsigned int i = 0; i < n_groups; i++){
 
 		// group color
 		unsigned int R = rand() / (RAND_MAX/255);
 		unsigned int G = rand() / (RAND_MAX/255);
 		unsigned int B = rand() / (RAND_MAX/255);
 		
-		for (int j = 0; j < pp_group; j++){
-			int k = i * pp_group + j;
+		for (unsigned int j = 0; j < pp_group; j++){
+			unsigned int k = i * pp_group + j;
 			particles.push_back(Particle());
 			particles[k].p_ID = k;
 			particles[k].x = static_cast <float> (rand()) / static_cast <float> (RAND_MAX/width);

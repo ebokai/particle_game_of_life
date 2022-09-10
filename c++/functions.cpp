@@ -50,7 +50,7 @@ float fast_atan2(float y, float x){
 	return res;
 }
 
-float xbound(float x, int lim){
+float xbound(float x, unsigned int lim){
 	if (x > lim){
 		x = x - lim;
 	}
@@ -62,21 +62,21 @@ float xbound(float x, int lim){
 }
 
 // FRAMEWORK METHODS =====
-int Framework::get_cell_ID(float x, float y){
-	int xs = int(x/cell_size);
-	int ys = int(y/cell_size);
-	int ws = int(width/cell_size);
+unsigned int Framework::get_cell_ID(float x, float y){
+	unsigned int xs = x/cell_size;
+	unsigned int ys = y/cell_size;
+	unsigned int ws = width/cell_size;
 	return xs + ys * ws;
 }
 
 void Framework::make_hash_table(){
-	map<int, vector<int>> new_table;
+	map<unsigned int, vector<unsigned int>> new_table;
 	float x, y;
-	for (int i = 0; i < n; i++){
+	for (unsigned int i = 0; i < n; i++){
 		Particle p = particles[i];
 		x = p.x;
 		y = p.y;
-		int cell_ID = get_cell_ID(x, y);
+		unsigned int cell_ID = get_cell_ID(x, y);
 		new_table[cell_ID].push_back(p.p_ID);
 	}
 	hash_table = new_table; // update hash_table
@@ -116,7 +116,7 @@ float Framework::dbound(float d, int lim){
 }
 
 void Framework::friction(){
-	for (int i = 0; i < n; i++){
+	for (unsigned int i = 0; i < n; i++){
 		float v = fast_sqrt(particles[i].vx * particles[i].vx + particles[i].vy * particles[i].vy);
 		float a = fast_atan2(particles[i].vy, particles[i].vx);
 		particles[i].vx -= fast_cos(a) * v * friction_strength * dt;
@@ -127,29 +127,31 @@ void Framework::friction(){
 
 void Framework::interact(){
 
-	int n_cells = get_cell_ID(width, height-1);
+	unsigned int n_cells = get_cell_ID(width, height-1);
+	unsigned int n_interactions;
 
 	float dx, dy, dr, dR;
 	float f, fx, fy, a;
 
-	for (int i = 0; i < n_cells; i++){
+	unsigned int neighbours[9];
+
+	for (unsigned int i = 0; i < n_cells; i++){
 
 		// CHECK CENTER CELL FOR PARTICLES
 
-		vector<int> this_cell = hash_table[i];
+		vector<unsigned int> this_cell = hash_table[i];
 
-		int n_this = this_cell.size();
+		unsigned int n_this = this_cell.size();
 
 		if (n_this == 0) continue;
 
 		// FIND NEIGHBOURS USING REFERENCE PARTICLE
-		int p_id = this_cell[0];
+		unsigned int p_id = this_cell[0];
 		Particle p_ref = particles[p_id];
-
 
 		// THIS COULD BE DONE ONCE AT INITIALIZATION
 		// ALSO, THE CELL INDEX COULD BE STORED IN THE PARTICLE STRUCT
-		int neighbours[9];
+		
 
 		neighbours[0] = i;
 		neighbours[1] = get_cell_ID(xbound(p_ref.x-cell_size, width), xbound(p_ref.y+cell_size, height));
@@ -161,27 +163,33 @@ void Framework::interact(){
 		neighbours[7] = get_cell_ID(xbound(p_ref.x, width), xbound(p_ref.y-cell_size, height));
 		neighbours[8] = get_cell_ID(xbound(p_ref.x+cell_size, width), xbound(p_ref.y-cell_size, height));
 
-		for (int j = 0; j < 9; j++){
+		for (unsigned int j = 0; j < 9; j++){
 
 			// LOOP OVER ADJACENT CELLS
-			int that_cell_id = neighbours[j];
-			vector<int> that_cell = hash_table[that_cell_id];
-			int n_that = that_cell.size();
+			unsigned int that_cell_id = neighbours[j];
+			vector<unsigned int> that_cell = hash_table[that_cell_id];
+			unsigned int n_that = that_cell.size();
 
 			if (n_that == 0) continue;
 
-			for(int i1 = 0; i1 < n_this; i1++){
+			for(unsigned int i1 = 0; i1 < n_this; i1++){
 
-				int p1_ID = this_cell[i1];
+				unsigned int p1_ID = this_cell[i1];
 				Particle p1 = particles[p1_ID];
 				
-				for(int i2 = 0; i2 < n_that; i2++){
+				n_interactions = 0;
+
+				for(unsigned int i2 = 0; i2 < n_that; i2++){
+
+					if (n_interactions > max_interactions) continue;
 					
-					int p2_ID = that_cell[i2];
+					unsigned int p2_ID = that_cell[i2];
 
 					if (p1_ID == p2_ID) continue;
 
 					Particle p2 = particles[p2_ID];
+
+					
 
 					f = 0;
 
@@ -198,6 +206,7 @@ void Framework::interact(){
 						fy = f * fast_sin(a);
 						p1.vx += fx * dt;
 						p1.vy += fy * dt;
+						n_interactions++;
 					}
 					if ((dR > dRepelSq) && (dR < dForceSq)) {
 						a = fast_atan2(dy, dx);
@@ -206,15 +215,13 @@ void Framework::interact(){
 						fx = f * fast_cos(a);
 						fy = f * fast_sin(a);
 						p1.vx += fx * dt;
-						p1.vy += fy * dt;							
+						p1.vy += fy * dt;
+						n_interactions++;							
 					}
-					
 				}
 				particles[p1_ID] = p1;
-			}
-			
-		}
-		
+			}	
+		}	
 	}
 }
 
