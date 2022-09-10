@@ -21,7 +21,7 @@ struct Particle{
 class Framework{
 public:
 	
-	Framework(int n_, unsigned int width_, unsigned int height_);
+	Framework(unsigned int width_, unsigned int height_);
 	~Framework();
 	
 	int get_cell_ID(float x, float y);
@@ -31,20 +31,36 @@ public:
 	void update_and_bound();
 	void interact();
 	void friction();
-	void initialize(int n_groups, int pp_group);
+	void initialize();
 	void main_loop();
 
 private:
-	int n;
 	float dt = 0.01;
 	unsigned int width;
 	unsigned int height;
 	unsigned int cell_size = 100;
 
+	int n_target = 5000;
+	int n_groups = 10;
+	int pp_group = n_target / n_groups;
+	int n = n_groups * pp_group;
+
+	// simulation parameters
+	float dRepel = 30;
+	float dRepelSq = dRepel * dRepel;
+	float repel_strength = 400;
+
+	float dForce = 60;
+	float dForceSq = dForce * dForce;
+
+	float friction_strength = 10;
+
+	// containers
 	vector<Particle> particles;
 	vector<vector<int>> forces;
 	map<int, vector<int>> hash_table;
-	
+
+	// SDL objects
 	SDL_Window *window = NULL;
 	SDL_Renderer *renderer = NULL;
 };

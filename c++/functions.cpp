@@ -116,12 +116,11 @@ float Framework::dbound(float d, int lim){
 }
 
 void Framework::friction(){
-	float fs = 5;
 	for (int i = 0; i < n; i++){
 		float v = fast_sqrt(particles[i].vx * particles[i].vx + particles[i].vy * particles[i].vy);
 		float a = fast_atan2(particles[i].vy, particles[i].vx);
-		particles[i].vx -= fast_cos(a) * v * fs * dt;
-		particles[i].vy -= fast_sin(a) * v * fs * dt;
+		particles[i].vx -= fast_cos(a) * v * friction_strength * dt;
+		particles[i].vy -= fast_sin(a) * v * friction_strength * dt;
 	}
 }
 
@@ -147,6 +146,9 @@ void Framework::interact(){
 			int p_id = this_cell[0];
 			Particle p_ref = particles[p_id];
 
+
+			// THIS COULD BE DONE ONCE AT INITIALIZATION
+			// ALSO, THE CELL INDEX COULD BE STORED IN THE PARTICLE STRUCT
 			int neighbours[9];
 
 			neighbours[0] = i;
@@ -187,19 +189,19 @@ void Framework::interact(){
 
 								dR = dx*dx + dy*dy;
 
-								if ((dR > 0) && (dR < 900)){
+								if ((dR > 0) && (dR < dRepelSq)){
 									a = fast_atan2(dy, dx);
 									dr = fast_sqrt(dR);
-									f = 100 * (30 - dr) / (dr + 1);
+									f = repel_strength * (dRepel - dr) / (dr + 1);
 									fx = f * fast_cos(a);
 									fy = f * fast_sin(a);
 									p1.vx += fx * dt;
 									p1.vy += fy * dt;
 								}
-								if ((dR > 900) && (dR < 2500)) {
+								if ((dR > dRepelSq) && (dR < dForceSq)) {
 									a = fast_atan2(dy, dx);
 									dr = fast_sqrt(dR);
-									f = forces[p1_ID][p2_ID] * (dr - 30);
+									f = forces[p1_ID][p2_ID] * (dr - dRepel);
 									fx = f * fast_cos(a);
 									fy = f * fast_sin(a);
 									p1.vx += fx * dt;

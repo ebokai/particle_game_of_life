@@ -8,20 +8,10 @@ int main(int argc, char *argv[]){
 	unsigned int width = 1600;
 	unsigned int height = 900;
 
-	// NUMBER OF PARTICLES =====
-	int n_target = 5000; // target number of particles
-	int n_groups = 10; // number of groups
-	int pp_group = n_target / n_groups; // number of particles per group
-	int n = n_groups * pp_group; // actual number of particles
-
-	cout << n << endl;
-
 	// SIMULATION =====
-	Framework framework(n, width, height);
-	framework.initialize(n_groups, pp_group);
+	Framework framework(width, height);
+	framework.initialize();
 	framework.main_loop();
-
-	//framework.interact_test();
 
 	return 0;
 }

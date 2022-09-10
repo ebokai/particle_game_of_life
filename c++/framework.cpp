@@ -2,7 +2,7 @@
 #include "pgol.h"
 
 // CONSTRUCTOR - INITIALIZE SDL
-Framework::Framework(int n_, unsigned int width_, unsigned int height_): n(n_), width(width_), height(height_){
+Framework::Framework(unsigned int width_, unsigned int height_): width(width_), height(height_){
 	SDL_Init(SDL_INIT_VIDEO);
 	window = SDL_CreateWindow("", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, width, height, SDL_WINDOW_OPENGL);
 	renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
@@ -40,11 +40,7 @@ void Framework::main_loop(){
 		interact();
 		friction();
 		update_and_bound();
-
-		if (frame % 5 == 0){
-			make_hash_table();
-		}
-		
+		make_hash_table();		
 
 		// DRAW PARTICLES =====
 		for(int i = 0; i < n; i++){
@@ -75,7 +71,7 @@ void Framework::main_loop(){
 }
 
 // INITIALIZE CLASS ATTRIBUTES
-void Framework::initialize(int n_groups, int pp_group){
+void Framework::initialize(){
 	srand(time(NULL));
 
 	// INITIALIZE PARTICLES 
