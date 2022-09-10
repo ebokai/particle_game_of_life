@@ -140,80 +140,81 @@ void Framework::interact(){
 
 		int n_this = this_cell.size();
 
-		if (n_this > 0){
+		if (n_this == 0) continue;
 
-			// FIND NEIGHBOURS USING REFERENCE PARTICLE
-			int p_id = this_cell[0];
-			Particle p_ref = particles[p_id];
+		// FIND NEIGHBOURS USING REFERENCE PARTICLE
+		int p_id = this_cell[0];
+		Particle p_ref = particles[p_id];
 
 
-			// THIS COULD BE DONE ONCE AT INITIALIZATION
-			// ALSO, THE CELL INDEX COULD BE STORED IN THE PARTICLE STRUCT
-			int neighbours[9];
+		// THIS COULD BE DONE ONCE AT INITIALIZATION
+		// ALSO, THE CELL INDEX COULD BE STORED IN THE PARTICLE STRUCT
+		int neighbours[9];
 
-			neighbours[0] = i;
-			neighbours[1] = get_cell_ID(xbound(p_ref.x-cell_size, width), xbound(p_ref.y+cell_size, height));
-			neighbours[2] = get_cell_ID(xbound(p_ref.x, width), xbound(p_ref.y+cell_size, height));
-			neighbours[3] = get_cell_ID(xbound(p_ref.x+cell_size, width), xbound(p_ref.y+cell_size, height));
-			neighbours[4] = get_cell_ID(xbound(p_ref.x-cell_size, width), xbound(p_ref.y, height));
-			neighbours[5] = get_cell_ID(xbound(p_ref.x+cell_size, width), xbound(p_ref.y, height));
-			neighbours[6] = get_cell_ID(xbound(p_ref.x-cell_size, width), xbound(p_ref.y-cell_size, height));
-			neighbours[7] = get_cell_ID(xbound(p_ref.x, width), xbound(p_ref.y-cell_size, height));
-			neighbours[8] = get_cell_ID(xbound(p_ref.x+cell_size, width), xbound(p_ref.y-cell_size, height));
+		neighbours[0] = i;
+		neighbours[1] = get_cell_ID(xbound(p_ref.x-cell_size, width), xbound(p_ref.y+cell_size, height));
+		neighbours[2] = get_cell_ID(xbound(p_ref.x, width), xbound(p_ref.y+cell_size, height));
+		neighbours[3] = get_cell_ID(xbound(p_ref.x+cell_size, width), xbound(p_ref.y+cell_size, height));
+		neighbours[4] = get_cell_ID(xbound(p_ref.x-cell_size, width), xbound(p_ref.y, height));
+		neighbours[5] = get_cell_ID(xbound(p_ref.x+cell_size, width), xbound(p_ref.y, height));
+		neighbours[6] = get_cell_ID(xbound(p_ref.x-cell_size, width), xbound(p_ref.y-cell_size, height));
+		neighbours[7] = get_cell_ID(xbound(p_ref.x, width), xbound(p_ref.y-cell_size, height));
+		neighbours[8] = get_cell_ID(xbound(p_ref.x+cell_size, width), xbound(p_ref.y-cell_size, height));
 
-			for (int j = 0; j < 9; j++){
+		for (int j = 0; j < 9; j++){
 
-				// LOOP OVER ADJACENT CELLS
-				int that_cell_id = neighbours[j];
-				vector<int> that_cell = hash_table[that_cell_id];
-				int n_that = that_cell.size();
+			// LOOP OVER ADJACENT CELLS
+			int that_cell_id = neighbours[j];
+			vector<int> that_cell = hash_table[that_cell_id];
+			int n_that = that_cell.size();
 
-				if (n_that > 0){
-					for(int i1 = 0; i1 < n_this; i1++){
+			if (n_that == 0) continue;
 
-						int p1_ID = this_cell[i1];
-						Particle p1 = particles[p1_ID];
-						
-						for(int i2 = 0; i2 < n_that; i2++){
-							
-							int p2_ID = that_cell[i2];
+			for(int i1 = 0; i1 < n_this; i1++){
 
-							if (p1_ID != p2_ID){
+				int p1_ID = this_cell[i1];
+				Particle p1 = particles[p1_ID];
+				
+				for(int i2 = 0; i2 < n_that; i2++){
+					
+					int p2_ID = that_cell[i2];
 
-								Particle p2 = particles[p2_ID];
+					if (p1_ID == p2_ID) continue;
 
-								f = 0;
+					Particle p2 = particles[p2_ID];
 
-								dx = dbound(p1.x - p2.x, width);
-								dy = dbound(p1.y - p2.y, height); 
+					f = 0;
 
-								dR = dx*dx + dy*dy;
+					dx = dbound(p1.x - p2.x, width);
+					dy = dbound(p1.y - p2.y, height); 
 
-								if ((dR > 0) && (dR < dRepelSq)){
-									a = fast_atan2(dy, dx);
-									dr = fast_sqrt(dR);
-									f = repel_strength * (dRepel - dr) / (dr + 1);
-									fx = f * fast_cos(a);
-									fy = f * fast_sin(a);
-									p1.vx += fx * dt;
-									p1.vy += fy * dt;
-								}
-								if ((dR > dRepelSq) && (dR < dForceSq)) {
-									a = fast_atan2(dy, dx);
-									dr = fast_sqrt(dR);
-									f = forces[p1_ID][p2_ID] * (dr - dRepel);
-									fx = f * fast_cos(a);
-									fy = f * fast_sin(a);
-									p1.vx += fx * dt;
-									p1.vy += fy * dt;							
-								}
-							}
-						}
-						particles[p1_ID] = p1;
+					dR = dx*dx + dy*dy;
+
+					if ((dR > 0) && (dR < dRepelSq)){
+						a = fast_atan2(dy, dx);
+						dr = fast_sqrt(dR);
+						f = repel_strength * (dRepel - dr) / (dr + 1);
+						fx = f * fast_cos(a);
+						fy = f * fast_sin(a);
+						p1.vx += fx * dt;
+						p1.vy += fy * dt;
 					}
+					if ((dR > dRepelSq) && (dR < dForceSq)) {
+						a = fast_atan2(dy, dx);
+						dr = fast_sqrt(dR);
+						f = forces[p1_ID][p2_ID] * (dr - dRepel);
+						fx = f * fast_cos(a);
+						fy = f * fast_sin(a);
+						p1.vx += fx * dt;
+						p1.vy += fy * dt;							
+					}
+					
 				}
+				particles[p1_ID] = p1;
 			}
+			
 		}
+		
 	}
 }
 
