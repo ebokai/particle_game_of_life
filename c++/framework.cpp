@@ -6,6 +6,7 @@ Framework::Framework(unsigned int width_, unsigned int height_): width(width_), 
 	SDL_Init(SDL_INIT_VIDEO);
 	window = SDL_CreateWindow("", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, width, height, SDL_WINDOW_OPENGL);
 	renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
+	SDL_SetHint(SDL_HINT_RENDER_BATCHING, "1");
 	SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0);
 	SDL_RenderClear(renderer);
 	SDL_RenderPresent(renderer);
@@ -34,7 +35,7 @@ void Framework::main_loop(){
 		SDL_PollEvent(&event);
 		if(event.type == SDL_QUIT) return;
 		SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0);
-		SDL_RenderClear(renderer);
+		//SDL_RenderClear(renderer);
 
 		// SIMULATION UPDATES =====
 		interact();

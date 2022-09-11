@@ -41,11 +41,11 @@ private:
 
 	// performance parameters
 	unsigned int cell_size = 100;
-	unsigned int n_target = 5000;
+	unsigned int n_target = 2500;
 	unsigned int n_groups = 10;
 	unsigned int pp_group = n_target / n_groups;
 	unsigned int n = n_groups * pp_group;
-	unsigned int max_interactions = 40;
+	unsigned int max_interactions = 100;
 
 	// simulation parameters
 	float dRepel = 30;
