@@ -14,7 +14,7 @@ struct Particle{
 	float x, y;
 	float vx, vy;
 	unsigned int p_ID;
-	unsigned int R, G, B;
+	unsigned int R, G, B, A;
 };
 
 // MAIN SIMULATION CLASS
@@ -41,11 +41,11 @@ private:
 
 	// performance parameters
 	unsigned int cell_size = 100;
-	unsigned int n_target = 2500;
+	unsigned int n_target = 3500;
 	unsigned int n_groups = 10;
 	unsigned int pp_group = n_target / n_groups;
 	unsigned int n = n_groups * pp_group;
-	unsigned int max_interactions = 100;
+	unsigned int max_interactions = 10;
 
 	// simulation parameters
 	float dRepel = 30;
@@ -55,7 +55,7 @@ private:
 	float dForce = 70;
 	float dForceSq = dForce * dForce;
 
-	float friction_strength = 10;
+	float friction_strength = 15;
 
 	// containers
 	vector<Particle> particles;

@@ -7,6 +7,7 @@ Framework::Framework(unsigned int width_, unsigned int height_): width(width_), 
 	window = SDL_CreateWindow("", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, width, height, SDL_WINDOW_OPENGL);
 	renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
 	SDL_SetHint(SDL_HINT_RENDER_BATCHING, "1");
+	SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
 	SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0);
 	SDL_RenderClear(renderer);
 	SDL_RenderPresent(renderer);
@@ -35,7 +36,7 @@ void Framework::main_loop(){
 		SDL_PollEvent(&event);
 		if(event.type == SDL_QUIT) return;
 		SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0);
-		//SDL_RenderClear(renderer);
+		SDL_RenderClear(renderer);
 
 		// SIMULATION UPDATES =====
 		interact();
@@ -45,15 +46,15 @@ void Framework::main_loop(){
 
 		// DRAW PARTICLES =====
 		for(unsigned int i = 0; i < n; i++){
-			SDL_SetRenderDrawColor(renderer, particles[i].R, particles[i].G, particles[i].B, 255);
+			SDL_SetRenderDrawColor(renderer, particles[i].R, particles[i].G, particles[i].B, particles[i].A);
 
-			for (int x = particles[i].x-2; x <= particles[i].x+2; x++){
-				for (int y = particles[i].y-2; y <= particles[i].y+2; y++){
+			for (int x = particles[i].x-1; x <= particles[i].x+1; x++){
+				for (int y = particles[i].y-1; y <= particles[i].y+1; y++){
 
 					float X2 = (particles[i].x*particles[i].x) - 2 * (x*particles[i].x) + (x*x);
 					float Y2 = (particles[i].y*particles[i].y) - 2 * (y*particles[i].y) + (y*y);
 
-					if((X2 + Y2) <= (4)){
+					if((X2 + Y2) <= (1)){
 						SDL_RenderDrawPoint(renderer, x, y);
 					}
 				}
@@ -82,6 +83,8 @@ void Framework::initialize(){
 		unsigned int R = rand() / (RAND_MAX/255);
 		unsigned int G = rand() / (RAND_MAX/255);
 		unsigned int B = rand() / (RAND_MAX/255);
+		unsigned int A = 255; 
+
 		
 		for (unsigned int j = 0; j < pp_group; j++){
 			unsigned int k = i * pp_group + j;
@@ -94,6 +97,7 @@ void Framework::initialize(){
 			particles[k].R = R;
 			particles[k].G = G;
 			particles[k].B = B;
+			particles[k].A = A;
 		}
 	}
 
