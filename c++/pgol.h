@@ -2,6 +2,7 @@
 #include <vector>
 #include <cmath>
 #include <map>
+#include <time.h>
 #include <iostream>
 
 using namespace std;
@@ -35,17 +36,19 @@ public:
 	void main_loop();
 
 private:
-	float dt = 0.01;
+	float dt = 0.004;
 	unsigned int width;
 	unsigned int height;
 
-	// performance parameters
+	// performance/visual parameters
 	unsigned int cell_size = 100;
 	unsigned int n_target = 3500;
 	unsigned int n_groups = 10;
 	unsigned int pp_group = n_target / n_groups;
 	unsigned int n = n_groups * pp_group;
-	unsigned int max_interactions = 10;
+	unsigned int max_interactions = 256;
+	unsigned int radius = 2;
+	unsigned int trail_alpha = 255; // 0 - infinite tails, 255 - no tails
 
 	// simulation parameters
 	float dRepel = 30;
@@ -54,6 +57,7 @@ private:
 
 	float dForce = 70;
 	float dForceSq = dForce * dForce;
+	int force_strength = 20;
 
 	float friction_strength = 15;
 

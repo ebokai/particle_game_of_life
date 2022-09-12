@@ -27,6 +27,12 @@ void Framework::main_loop(){
 	unsigned int frame = 0;
 	float tot_fps = 0;
 
+	SDL_Rect rect;
+	rect.x = 0;
+	rect.y = 0;
+	rect.w = width;
+	rect.h = height;
+
 	while(!(event.type == SDL_QUIT)){
 
 		Uint64 start = SDL_GetPerformanceCounter();
@@ -35,8 +41,11 @@ void Framework::main_loop(){
 		SDL_Delay(0);
 		SDL_PollEvent(&event);
 		if(event.type == SDL_QUIT) return;
-		SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0);
-		SDL_RenderClear(renderer);
+
+
+		SDL_SetRenderDrawColor(renderer, 0, 0, 0, trail_alpha);
+		SDL_RenderFillRect(renderer, &rect);
+		//SDL_RenderClear(renderer);
 
 		// SIMULATION UPDATES =====
 		interact();
@@ -48,13 +57,13 @@ void Framework::main_loop(){
 		for(unsigned int i = 0; i < n; i++){
 			SDL_SetRenderDrawColor(renderer, particles[i].R, particles[i].G, particles[i].B, particles[i].A);
 
-			for (int x = particles[i].x-1; x <= particles[i].x+1; x++){
-				for (int y = particles[i].y-1; y <= particles[i].y+1; y++){
+			for (int x = particles[i].x-radius; x <= particles[i].x+radius; x++){
+				for (int y = particles[i].y-radius; y <= particles[i].y+radius; y++){
 
 					float X2 = (particles[i].x*particles[i].x) - 2 * (x*particles[i].x) + (x*x);
 					float Y2 = (particles[i].y*particles[i].y) - 2 * (y*particles[i].y) + (y*y);
 
-					if((X2 + Y2) <= (1)){
+					if((X2 + Y2) <= (radius*radius)){
 						SDL_RenderDrawPoint(renderer, x, y);
 					}
 				}
@@ -75,6 +84,18 @@ void Framework::main_loop(){
 // INITIALIZE CLASS ATTRIBUTES
 void Framework::initialize(){
 	srand(time(NULL));
+
+
+	// simulation parameters [random]
+	float dRepel = 10 + static_cast <float> (rand()) / static_cast <float> (RAND_MAX/50);
+	float dRepelSq = dRepel * dRepel;
+	float repel_strength = 400 + static_cast <float> (rand()) / static_cast <float> (RAND_MAX/1000);
+
+	float dForce = dRepel + static_cast <float> (rand()) / static_cast <float> (RAND_MAX/50);
+	float dForceSq = dForce * dForce;
+	int force_strength = 20 + (rand()) / (RAND_MAX/80);
+
+	float friction_strength = static_cast <float> (rand()) / static_cast <float> (RAND_MAX/20);
 
 	// INITIALIZE PARTICLES 
 	for (unsigned int i = 0; i < n_groups; i++){
@@ -103,12 +124,15 @@ void Framework::initialize(){
 
 	// POPULATE FORCE ARRAY
 	vector<vector<int>> new_forces(n, vector<int>(n));
+
 	for (unsigned int i = 0; i < n_groups; i++){
 		for(unsigned int j = 0; j < n_groups; j++){
-			int force = -20 + rand() / (RAND_MAX/40);
+			int force = -force_strength/2 + rand() / (RAND_MAX/force_strength);
+
 			for(unsigned int k = i * pp_group; k < (i+1) * pp_group; k++){
 				for(unsigned int l = j * pp_group; l < (j+1) * pp_group; l++){
 					new_forces[k][l] = force;
+
 					if (k == l){
 						new_forces[k][l] = 0;
 					}
@@ -119,4 +143,5 @@ void Framework::initialize(){
 
 	make_hash_table();
 	forces = new_forces;
+
 }
