@@ -36,19 +36,19 @@ public:
 	void main_loop();
 
 private:
-	float dt = 0.004;
+	float dt = 0.01;
 	unsigned int width;
 	unsigned int height;
 
 	// performance/visual parameters
 	unsigned int cell_size = 100;
-	unsigned int n_target = 3500;
+	unsigned int n_target = 2500;
 	unsigned int n_groups = 10;
 	unsigned int pp_group = n_target / n_groups;
 	unsigned int n = n_groups * pp_group;
 	unsigned int max_interactions = 256;
-	unsigned int radius = 2;
-	unsigned int trail_alpha = 255; // 0 - infinite tails, 255 - no tails
+	unsigned int radius = 1;
+	unsigned int trail_alpha = 3; // 0 - infinite tails, 255 - no tails
 
 	// simulation parameters
 	float dRepel = 30;
