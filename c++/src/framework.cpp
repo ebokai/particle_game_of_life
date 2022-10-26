@@ -95,7 +95,7 @@ void Framework::initialize(){
 	float dForceSq = dForce * dForce;
 	int force_strength = 20 + (rand()) / (RAND_MAX/80);
 
-	float friction_strength = static_cast <float> (rand()) / static_cast <float> (RAND_MAX/20);
+	float friction_strength = static_cast <float> (rand()) / static_cast <float> (RAND_MAX/50);
 
 	// INITIALIZE PARTICLES 
 	for (unsigned int i = 0; i < n_groups; i++){
