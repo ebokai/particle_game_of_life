@@ -36,7 +36,7 @@ public:
 	void main_loop();
 
 private:
-	float dt = 0.01;
+	float dt = 0.001;
 	unsigned int width;
 	unsigned int height;
 
@@ -48,7 +48,7 @@ private:
 	unsigned int n = n_groups * pp_group;
 	unsigned int max_interactions = 256;
 	unsigned int radius = 2;
-	unsigned int trail_alpha = 5; // 0 - infinite tails, 255 - no tails
+	unsigned int trail_alpha = 255; // 0 - infinite tails, 255 - no tails
 
 	// simulation parameters
 	float dRepel = 30;

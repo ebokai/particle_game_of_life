@@ -199,21 +199,29 @@ void Framework::interact(){
 					dR = dx*dx + dy*dy;
 
 					if ((dR > 0) && (dR < dRepelSq)){
-						a = fast_atan2(dy, dx);
+						//a = fast_atan2(dy, dx);
 						dr = fast_sqrt(dR);
 						f = repel_strength * (dRepel - dr) / (dr + 1);
-						fx = f * fast_cos(a);
-						fy = f * fast_sin(a);
+						//fx = f * fast_cos(a);
+						//fy = f * fast_sin(a);
+						// this can also be implemented using the [dx,dy] unit vector
+						// avoids cos, sin and atan
+						fx = f * dx/dr;
+						fy = f * dy/dr;
+
 						p1.vx += fx * dt;
 						p1.vy += fy * dt;
 						n_interactions++;
 					}
 					if ((dR > dRepelSq) && (dR < dForceSq)) {
-						a = fast_atan2(dy, dx);
+						//a = fast_atan2(dy, dx);
 						dr = fast_sqrt(dR);
 						f = forces[p1_ID][p2_ID] * (dr - dRepel);
-						fx = f * fast_cos(a);
-						fy = f * fast_sin(a);
+						//fx = f * fast_cos(a);
+						//fy = f * fast_sin(a);
+						fx = f * dx/dr;
+						fy = f * dy/dr;
+
 						p1.vx += fx * dt;
 						p1.vy += fy * dt;
 						n_interactions++;							
