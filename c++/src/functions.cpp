@@ -152,7 +152,6 @@ void Framework::interact(){
 		// THIS COULD BE DONE ONCE AT INITIALIZATION
 		// ALSO, THE CELL INDEX COULD BE STORED IN THE PARTICLE STRUCT
 		
-
 		neighbours[0] = i;
 		neighbours[1] = get_cell_ID(xbound(p_ref.x-cell_size, width), xbound(p_ref.y+cell_size, height));
 		neighbours[2] = get_cell_ID(xbound(p_ref.x, width), xbound(p_ref.y+cell_size, height));
