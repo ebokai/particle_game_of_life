@@ -42,6 +42,13 @@ void Framework::main_loop(){
 		SDL_PollEvent(&event);
 		if(event.type == SDL_QUIT) return;
 
+		// // gradually fade out earlier frames
+		// if (frame % 60 == 0) {
+		// 	trail_alpha = 5;
+		// } else {
+		// 	trail_alpha = 0;
+		// }
+
 
 		SDL_SetRenderDrawColor(renderer, 0, 0, 0, trail_alpha);
 		SDL_RenderFillRect(renderer, &rect);
@@ -87,11 +94,11 @@ void Framework::initialize(){
 
 
 	// simulation parameters [random]
-	float dRepel = 10 + static_cast <float> (rand()) / static_cast <float> (RAND_MAX/50);
+	float dRepel = 100 + static_cast <float> (rand()) / static_cast <float> (RAND_MAX/50);
 	float dRepelSq = dRepel * dRepel;
 	float repel_strength = 400 + static_cast <float> (rand()) / static_cast <float> (RAND_MAX/1000);
 
-	float dForce = dRepel + static_cast <float> (rand()) / static_cast <float> (RAND_MAX/50);
+	float dForce = dRepel + static_cast <float> (rand()) / static_cast <float> (RAND_MAX/100);
 	float dForceSq = dForce * dForce;
 	int force_strength = 20 + (rand()) / (RAND_MAX/80);
 
@@ -101,10 +108,10 @@ void Framework::initialize(){
 	for (unsigned int i = 0; i < n_groups; i++){
 
 		// group color
-		unsigned int R = rand() / (RAND_MAX/255);
-		unsigned int G = rand() / (RAND_MAX/255);
-		unsigned int B = rand() / (RAND_MAX/255);
-		unsigned int A = 255; 
+		unsigned int R = 64 + rand() / (RAND_MAX/191);
+		unsigned int G = 64 + rand() / (RAND_MAX/191);
+		unsigned int B = 64 + rand() / (RAND_MAX/191);
+		unsigned int A = 255;
 
 		
 		for (unsigned int j = 0; j < pp_group; j++){
@@ -115,6 +122,7 @@ void Framework::initialize(){
 			particles[k].y = static_cast <float> (rand()) / static_cast <float> (RAND_MAX/height);
 			particles[k].vx = -50 + static_cast <float> (rand()) / static_cast <float> (RAND_MAX/100);
 			particles[k].vy = -50 + static_cast <float> (rand()) / static_cast <float> (RAND_MAX/100);
+
 			particles[k].R = R;
 			particles[k].G = G;
 			particles[k].B = B;
@@ -145,3 +153,5 @@ void Framework::initialize(){
 	forces = new_forces;
 
 }
+
+

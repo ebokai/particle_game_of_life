@@ -32,18 +32,19 @@ public:
 	void update_and_bound();
 	void interact();
 	void friction();
+	void save_frame_as_image(unsigned int frame);
 	void initialize();
 	void main_loop();
 
 private:
-	float dt = 0.001;
+	float dt = 0.002;
 	unsigned int width;
 	unsigned int height;
 
 	// performance/visual parameters
-	unsigned int cell_size = 100;
+	unsigned int cell_size = 96;
 	unsigned int n_target = 2500;
-	unsigned int n_groups = 10;
+	unsigned int n_groups = 5;
 	unsigned int pp_group = n_target / n_groups;
 	unsigned int n = n_groups * pp_group;
 	unsigned int max_interactions = 256;

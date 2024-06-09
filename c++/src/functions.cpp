@@ -11,6 +11,7 @@ float fast_sqrt(float x){
 	return x * fast_rsqrt(x);
 }
 
+
 float atan_approx(float x){
 	float a1 = 0.99997726f;
 	float a3 = -0.33262347f;

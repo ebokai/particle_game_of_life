@@ -5,7 +5,7 @@
 int main(int argc, char *argv[]){
 
 	// SCREEN SIZE =====
-	unsigned int width = 1600;
+	unsigned int width = 1440;
 	unsigned int height = 900;
 
 	// SIMULATION =====
