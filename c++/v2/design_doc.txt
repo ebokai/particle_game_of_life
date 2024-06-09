@@ -1,0 +1,6 @@
+- add collisions
+- remove overshoot artefacts
+- fast circle rendering for arbitrary radius particles
+- rescale units to O(1)
+- control parameters in real-time
+- reset simulation option
