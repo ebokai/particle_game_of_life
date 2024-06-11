@@ -1,10 +1,9 @@
 #include "simulation.h"
 
 // constructor
-Simulation::Simulation() {
+Simulation::Simulation() {	
 	initialize_SDL();
 	initialize_sim();
-	
 }
 
 // destructor
@@ -30,7 +29,7 @@ void Simulation::main_loop() {
 		SDL_RenderClear(renderer);
 
 		for (auto& p : particles) {
-			p.update_pos(dt);
+			p.update_pos(dt, width, height, margin);
 			draw_circle(renderer, &p);
 		}
 
@@ -64,10 +63,10 @@ void Simulation::initialize_sim() {
 	std::mt19937 gen(rd());
 	std::uniform_real_distribution<float> dis_x(0.0f, static_cast<float>(width));
 	std::uniform_real_distribution<float> dis_y(0.0f, static_cast<float>(height));
-	std::uniform_real_distribution<float> dis_v(-2.0f, 2.0f);
+	std::uniform_real_distribution<float> dis_v(-5.0f, 5.0f);
 	std::uniform_int_distribution<int> dis_c(0, 255);
 
-	for (unsigned int i = 0; i < 20; i++) {
+	for (unsigned int i = 0; i < 500; i++) {
 		float x = dis_x(gen);
 		float y = dis_y(gen);
 		float vx = dis_v(gen);
@@ -83,7 +82,6 @@ void Simulation::initialize_sim() {
 		p.set_color(R,G,B);
 		p.label = i;
 		particles.push_back(p);
-
 	}
 }
 

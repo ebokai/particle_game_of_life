@@ -1,4 +1,3 @@
-
 struct Particle{
 	
 	float x;
@@ -9,7 +8,8 @@ struct Particle{
 	float ay = 0;
 
 	unsigned int label;
-	float radius = 25;
+	
+	float radius = 10;
 
 	int R;
 	int G;
@@ -31,11 +31,33 @@ struct Particle{
 		B = blue;
 	}
 
-	void update_pos(float dt) {
+	void update_pos(float dt, int width, int height, int margin) {
 		float new_x = x + vx * dt + 0.5f * ax * dt * dt;
 		float new_y = y + vy * dt + 0.5f * ay * dt * dt;
 		x = new_x;
 		y = new_y;
+		bound_x(width, margin);
+		bound_y(height, margin);
+	}
+
+	void bound_x(int width, int margin) {
+		if (x > width + margin) {
+			x = x - (width + 2 * margin);
+		}
+
+		if (x < (0 - margin)) {
+			x = x + (width + 2 * margin);
+		}
+	}
+
+	void bound_y(int height, int margin) {
+		if (y > height + margin) {
+			y = y - (height + 2 * margin);
+		}
+
+		if (y < (0 - margin)) {
+			y = y + (height + 2 * margin);
+		}
 	}
 
 };
