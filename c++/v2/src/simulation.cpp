@@ -206,7 +206,7 @@ void Simulation::interact() {
 								float new_y2 = my + p2.radius * uy;
 
 								float dzdz = (new_x1 - new_x2) * (new_x1 - new_x2) + (new_y1 - new_y2) * (new_y1 - new_y2);
-								float dvdz = (vx1 - vx2) * (vx1 - vx2) + (vy1 - vy2) * (vy1 - vy2);
+								float dvdz = (vx1 - vx2) * (new_x1 - new_x2) + (vy1 - vy2) * (new_y1 - new_y2);
 
 								float new_vx1 = vx1 - dvdz / dzdz * (new_x1 - new_x2);
 								float new_vy1 = vy1 - dvdz / dzdz * (new_y1 - new_y2);
@@ -216,8 +216,8 @@ void Simulation::interact() {
 
 								p1.set_position(new_x1, new_y1, margin);
 								p2.set_position(new_x2, new_y2, margin);
-								// p1.set_velocity(new_vx1, new_vy1);
-								// p2.set_velocity(new_vx2, new_vy2);
+								p1.set_velocity(new_vx1, new_vy1);
+								p2.set_velocity(new_vx2, new_vy2);
 
 								// std::cout << new_vx1 << " " << new_vy1 << std::endl;
 								// std::cout << new_vx2 << " " << new_vy2 << std::endl;
