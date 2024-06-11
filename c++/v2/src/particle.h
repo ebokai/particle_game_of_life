@@ -9,13 +9,14 @@ struct Particle{
 	float new_ax = 0;
 	float new_ay = 0;
 
-	int sign = 1;
+	int group;
 
 	unsigned int label;
 	unsigned int cell_x;
 	unsigned int cell_y;
 
-	float radius = 8;
+	int x_cells;
+	int y_cells;
 
 	int R;
 	int G;
@@ -82,6 +83,19 @@ struct Particle{
 	void update_cell(int margin) {
 		cell_x = x/margin;
 		cell_y = y/margin;
+
+		if ((cell_x < 0) || (cell_x > x_cells)) {
+			cell_x = 0;
+		}
+
+		if ((cell_y < 0) || (cell_y > y_cells)) {
+			cell_y = 0;
+		}
+	}
+
+	void friction() {
+		ax -= vx * 0.01;
+		ay -= vy * 0.01;
 	}
 
 };

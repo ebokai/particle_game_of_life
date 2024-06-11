@@ -1,7 +1,8 @@
 #include "simulation.h"
 
 // constructor
-Simulation::Simulation() {	
+Simulation::Simulation() 
+	: forces(n_groups, std::vector<float>(n_groups)){	
 	initialize_SDL();
 	initialize_sim();
 }
@@ -25,17 +26,21 @@ void Simulation::main_loop() {
 		SDL_Delay(0);
 		SDL_PollEvent(&event);
 
+		if (event.type == SDL_KEYDOWN) {
+			handle_key_press(event);
+		}
+
 		SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
 		SDL_RenderClear(renderer);
 
 		build_spatial_grid();
-
 		interact();
 
 		for (auto &p : particles) {
+			p.friction();
 			p.update_velocity(dt);
-			p.bound_x(width, margin);
-			p.bound_y(height, margin);
+			// p.bound_x(width, margin);
+			// p.bound_y(height, margin);
 			draw_circle(renderer, &p);
 		}
 
@@ -63,7 +68,7 @@ void Simulation::initialize_SDL() {
 }
 
 
-void Simulation::initialize_sim() {
+void Simulation::initialize_sim(bool first_time) {
 
 	// initialize RNG
 	std::random_device rd;
@@ -73,6 +78,7 @@ void Simulation::initialize_sim() {
 	std::uniform_real_distribution<float> dis_v(-5.0f, 5.0f);
 	std::uniform_int_distribution<int> dis_c(0, 255);
 	std::uniform_int_distribution<int> dis_s(0,2);
+	std::uniform_real_distribution<float> dis_f(-max_force, max_force);
 
 	// initialize spatial grid
 	spatial_grid.resize(x_cells);
@@ -83,31 +89,38 @@ void Simulation::initialize_sim() {
 		}
 	}
 
-	// initialize particles
-	for (unsigned int i = 0; i < n_particles; i++) {
-		float x = dis_x(gen);
-		float y = dis_y(gen);
-		float vx = 0; // dis_v(gen);
-		float vy = 0; // dis_v(gen);
-
-		// int R = dis_c(gen);
-		// int G = dis_c(gen);
-		// int B = dis_c(gen);
-
-		Particle p;
-		p.set_position(x, y, margin);
-		p.set_velocity(vx, vy);
+	// initialize particles and forces
+	for (unsigned int i = 0; i < n_groups; i++) {
 		
-		p.label = i;
-		p.sign = -1 + 2 * dis_s(gen);
+		int R = dis_c(gen);
+		int G = dis_c(gen);
+		int B = dis_c(gen);
 
-		if (p.sign < 0) {
-			p.set_color(255, 0, 0);
-		} else {
-			p.set_color(0, 0, 255);	
+		for (unsigned int j = 0; j < n_groups; j++) {
+			forces[i][j] = dis_f(gen);
 		}
-		
-		particles.push_back(p);
+
+		for (unsigned int j = 0; j < n_per_group; j++) {
+
+			if (first_time) {
+				float x = dis_x(gen);
+				float y = dis_y(gen);
+				float vx = 0; // dis_v(gen);
+				float vy = 0; // dis_v(gen);
+
+				Particle p;
+				p.set_position(x, y, margin);
+				p.set_velocity(vx, vy);
+				p.set_color(R, G, B);
+				p.x_cells = x_cells;
+				p.y_cells = y_cells;
+			
+				p.label = i * n_per_group + j;
+				p.group = i;
+			
+				particles.push_back(p);
+			}		
+		}		
 	}
 }
 
@@ -117,7 +130,7 @@ void Simulation::draw_circle(SDL_Renderer *renderer, Particle *p) {
 
 	int icx = static_cast<int>(p->x);
 	int icy = static_cast<int>(p->y);
-	int ird = static_cast<int>(p->radius);
+	int ird = static_cast<int>(particle_radius);
 
 	int x = ird - 1;
 	int y = 0;
@@ -157,7 +170,6 @@ void Simulation::build_spatial_grid() {
 	}
 
 	for (auto& p : particles) {
-		// p.set_color(0,255,0);
 		p.new_ax = 0;
 		p.new_ay = 0;
 		p.update_pos(dt, width, height, margin);
@@ -185,14 +197,11 @@ void Simulation::interact() {
 
 					for (auto& p1 : cell_one) {
 
-						
-						
 						for (auto& p2 : cell_two) {
 							if (p1.label == p2.label) {continue;}
 
 							collide(p1, p2);
 							attract(p1, p2);
-
 							
 							particles[p2.label] = p2;
 						}
@@ -208,8 +217,8 @@ void Simulation::interact() {
 
 void Simulation::collide(Particle &p1, Particle &p2) {
 
-	float coef = 0.95;
-	float r = 2 * p1.radius;
+
+	float r = 2 * collide_radius;
 	float dx = p2.x - p1.x;
 	float dy = p2.y - p1.y;
 	float dr = dx * dx + dy * dy;
@@ -231,10 +240,10 @@ void Simulation::collide(Particle &p1, Particle &p2) {
 		float mx = (p1.x + p2.x)/2.0f;
 		float my = (p1.y + p2.y)/2.0f;
 
-		float new_x1 = mx - p1.radius * ux;
-		float new_y1 = my - p1.radius * uy;
-		float new_x2 = mx + p2.radius * ux;
-		float new_y2 = my + p2.radius * uy;
+		float new_x1 = mx - collide_radius * ux;
+		float new_y1 = my - collide_radius * uy;
+		float new_x2 = mx + collide_radius * ux;
+		float new_y2 = my + collide_radius * uy;
 
 		float dzdz = (new_x1 - new_x2) * (new_x1 - new_x2) + (new_y1 - new_y2) * (new_y1 - new_y2);
 		float dvdz = (vx1 - vx2) * (new_x1 - new_x2) + (vy1 - vy2) * (new_y1 - new_y2);
@@ -258,16 +267,38 @@ void Simulation::collide(Particle &p1, Particle &p2) {
 
 
 void Simulation::attract(Particle &p1, Particle &p2) {
-	float dx = p2.x - p1.x;
-	float dy = p2.y - p1.y;
+
+	float dx = dbound(p2.x - p1.x, width);
+	float dy = dbound(p2.y - p1.y, height);
 
 	float dr = dx * dx + dy * dy;
 	float sdr = sqrt(dr);
-	float f = 50.0f / dr * (p1.sign * p2.sign);
+	float f = forces[p1.group][p2.group] / dr;
 
 	float r12x = dx / sdr;
 	float r12y = dy / sdr;
 
 	p1.new_ax += f * r12x;
 	p1.new_ay += f * r12y;
+}
+
+void Simulation::handle_key_press(SDL_Event &event) {
+	switch(event.key.keysym.sym) {
+	case 114:
+		initialize_sim(false);
+		break;
+	default:
+		std::cout << event.key.keysym.sym << std::endl;
+	}
+}
+
+float Simulation::dbound(float dx, int lim) {
+	if (dx > lim/2) {
+		dx = dx - lim;
+	}
+	if (dx < -lim/2) {
+		dx = dx + lim;
+	}
+
+	return dx;
 }
