@@ -8,16 +8,19 @@ struct Particle{
 	float ay = 0;
 
 	unsigned int label;
-	
-	float radius = 10;
+	unsigned int cell_x;
+	unsigned int cell_y;
+
+	float radius = 3;
 
 	int R;
 	int G;
 	int B;
 
-	void set_position(float new_x, float new_y) {
+	void set_position(float new_x, float new_y, int margin) {
 		x = new_x;
 		y = new_y;
+		update_cell(margin);
 	}
 
 	void set_velocity(float new_vx, float new_vy) {
@@ -36,28 +39,36 @@ struct Particle{
 		float new_y = y + vy * dt + 0.5f * ay * dt * dt;
 		x = new_x;
 		y = new_y;
-		bound_x(width, margin);
-		bound_y(height, margin);
+		update_cell(margin);
 	}
 
 	void bound_x(int width, int margin) {
 		if (x > width + margin) {
 			x = x - (width + 2 * margin);
+			update_cell(margin);
 		}
 
 		if (x < (0 - margin)) {
 			x = x + (width + 2 * margin);
+			update_cell(margin);
 		}
 	}
 
 	void bound_y(int height, int margin) {
 		if (y > height + margin) {
 			y = y - (height + 2 * margin);
+			update_cell(margin);
 		}
 
 		if (y < (0 - margin)) {
 			y = y + (height + 2 * margin);
+			update_cell(margin);
 		}
+	}
+
+	void update_cell(int margin) {
+		cell_x = x/margin;
+		cell_y = y/margin;
 	}
 
 };
