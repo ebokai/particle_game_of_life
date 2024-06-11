@@ -2,16 +2,20 @@ struct Particle{
 	
 	float x;
 	float y;
-	float vx = 1;
-	float vy = 1;
+	float vx = 0;
+	float vy = 0;
 	float ax = 0;
 	float ay = 0;
+	float new_ax = 0;
+	float new_ay = 0;
+
+	int sign = 1;
 
 	unsigned int label;
 	unsigned int cell_x;
 	unsigned int cell_y;
 
-	float radius = 3;
+	float radius = 8;
 
 	int R;
 	int G;
@@ -40,6 +44,15 @@ struct Particle{
 		x = new_x;
 		y = new_y;
 		update_cell(margin);
+	}
+
+	void update_velocity(float dt) {
+		float new_vx = vx + 0.5f * (ax + new_ax) * dt;
+		float new_vy = vy + 0.5f * (ay + new_ay) * dt;
+		vx = new_vx;
+		vy = new_vy;
+		ax = new_ax;
+		ay = new_ay;
 	}
 
 	void bound_x(int width, int margin) {

@@ -16,14 +16,16 @@ public:
 
 private:
 
+	int n_particles = 1000;
+
 	int width = 1024;
 	int height = 768;
-	int margin = 32;
+	int margin = 64;
 
 	int x_cells = (width + 2 * margin) / margin;
 	int y_cells = (height + 2 * margin) / margin;
 
-	
+
 
 	float dt = 0.1f;
 
@@ -32,6 +34,8 @@ private:
 	void draw_circle(SDL_Renderer *renderer, Particle *p);
 	void build_spatial_grid();
 	void interact();
+	void collide(Particle &p1, Particle &p2);
+	void attract(Particle &p1, Particle &p2);
 
 	SDL_Window *window = NULL;
 	SDL_Renderer *renderer = NULL;
