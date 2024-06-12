@@ -19,6 +19,9 @@ void Simulation::main_loop() {
 
 	SDL_Event event;
 
+	int tot_fps = 0;
+	int frame = 0;
+
 	while(!(event.type == SDL_QUIT)) {
 
 		Uint64 start = SDL_GetPerformanceCounter();
@@ -30,26 +33,34 @@ void Simulation::main_loop() {
 			handle_key_press(event);
 		}
 
-		SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+		SDL_SetRenderDrawColor(renderer, 0, 0, 0, 20);
 		SDL_RenderClear(renderer);
 
 		build_spatial_grid();
-		interact();
+		interact(false);
+		interact(true);
 
 		for (auto &p : particles) {
-			p.friction();
+			// p.friction();
 			p.update_velocity(dt);
 			// p.bound_x(width, margin);
 			// p.bound_y(height, margin);
-			draw_circle(renderer, &p);
+
+			if ((p.x > 0) & (p.x < width)) {
+				if ((p.y > 0) & (p.y < height)) {
+					draw_circle(renderer, &p);
+				}
+			}
+			
 		}
 
 		SDL_RenderPresent(renderer);
 
+		frame++;
 		Uint64 end = SDL_GetPerformanceCounter();
 		float secs = (end - start) / (float) SDL_GetPerformanceFrequency();
 		float fps = (1.0f) / secs;
-		std::cout << fps << std::endl;
+		tot_fps += fps;
 	}
 
 
@@ -78,7 +89,7 @@ void Simulation::initialize_sim(bool first_time) {
 	std::uniform_real_distribution<float> dis_v(-5.0f, 5.0f);
 	std::uniform_int_distribution<int> dis_c(0, 255);
 	std::uniform_int_distribution<int> dis_s(0,2);
-	std::uniform_real_distribution<float> dis_f(-max_force, max_force);
+	std::uniform_real_distribution<float> dis_f(-1.0f, 1.0f);
 
 	// initialize spatial grid
 	spatial_grid.resize(x_cells);
@@ -180,7 +191,7 @@ void Simulation::build_spatial_grid() {
 }
 
 
-void Simulation::interact() {
+void Simulation::interact(bool collide_only) {
 
 	for (int i = 0; i < x_cells; i++) {
 		for (int j = 0; j < y_cells; j++) {
@@ -201,7 +212,9 @@ void Simulation::interact() {
 							if (p1.label == p2.label) {continue;}
 
 							collide(p1, p2);
-							attract(p1, p2);
+							if (!collide_only) {
+								attract(p1, p2);
+							} 
 							
 							particles[p2.label] = p2;
 						}
@@ -266,6 +279,16 @@ void Simulation::collide(Particle &p1, Particle &p2) {
 }
 
 
+float Simulation::potential(float r) {
+
+	float rc = collide_radius;
+	float k = atr_range/2;
+	float fa = fabs(r - (rc + k))/k;
+	fa = 1 - fa;
+
+	return fa;
+}
+
 void Simulation::attract(Particle &p1, Particle &p2) {
 
 	float dx = dbound(p2.x - p1.x, width);
@@ -273,23 +296,21 @@ void Simulation::attract(Particle &p1, Particle &p2) {
 
 	float dr = dx * dx + dy * dy;
 	float sdr = sqrt(dr);
-	float f = forces[p1.group][p2.group] / dr;
+	float pot = 0;
+
+	if (sdr > collide_radius) {
+		if (sdr < collide_radius + atr_range) {
+			pot = potential(sdr);
+		}
+	}
+
+	float f = max_force * forces[p1.group][p2.group] * pot;
 
 	float r12x = dx / sdr;
 	float r12y = dy / sdr;
 
 	p1.new_ax += f * r12x;
 	p1.new_ay += f * r12y;
-}
-
-void Simulation::handle_key_press(SDL_Event &event) {
-	switch(event.key.keysym.sym) {
-	case 114:
-		initialize_sim(false);
-		break;
-	default:
-		std::cout << event.key.keysym.sym << std::endl;
-	}
 }
 
 float Simulation::dbound(float dx, int lim) {
@@ -301,4 +322,63 @@ float Simulation::dbound(float dx, int lim) {
 	}
 
 	return dx;
+}
+
+void Simulation::handle_key_press(SDL_Event &event) {
+	switch(event.key.keysym.sym) {
+	case 114:
+		initialize_sim(false);
+		break;
+	case 45:
+		if (max_force >= 0.5) {
+			max_force -= 0.5;
+			std::cout << "max force: " << max_force << std::endl;
+		}
+		break;
+	case 61:
+		if (max_force <= 19.5) {
+			max_force += 0.5;
+			std::cout << "max force: " << max_force << std::endl;
+		}
+		break;
+	case 91:
+		if (atr_range > 0) {
+			atr_range -= 1;
+			std::cout << "attract range: " << atr_range << std::endl;
+		}
+		break;
+	case 93: 
+		if (atr_range < 2*margin) {
+			atr_range += 1;
+			std::cout << "attract range: " << atr_range << std::endl;
+		}
+		break;
+	case 39:
+		if (coef >= 0.0025) {
+			coef -= 0.0025;
+			std::cout << "elasticity: " << coef << std::endl;
+		}
+		break;
+	case 92:
+		if (coef <= 0.9975) {
+			coef += 0.0025;
+			std::cout << "elasticity: " << coef << std::endl;
+		}
+		break;
+	case 46:
+		if (collide_radius >= particle_radius + 1) {
+			collide_radius -= 1.0f;
+			std::cout << "collide_radius: " << collide_radius << std::endl;
+		}
+		break;
+	case 47:
+		if (collide_radius <= 19) {
+			collide_radius += 1.0f;
+			std::cout << "collide_radius: " << collide_radius << std::endl;
+		}
+		break;
+
+	default:
+		std::cout << event.key.keysym.sym << std::endl;
+	}
 }
