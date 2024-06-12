@@ -2,9 +2,9 @@ Asymmetrically interacting particles (AIP).
 
 Also known as "Particle Life".
 
-Latest version can be found in c++/v2/ folder.
+Latest (interactive) version can be found in c++/v2/ folder.
 
-Keyboard commands:
+Keyboard commands (only in v2):
 
 - (-, =): Decrease / increase force strength.
 - ([, ]): Decrease / increase interaction range.
