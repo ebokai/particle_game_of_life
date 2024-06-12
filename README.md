@@ -10,6 +10,6 @@ Keyboard commands (only in v2):
 - ([, ]): Decrease / increase interaction range.
 - (;, '): Decrease / increase elasticity of collisions.
 - (., /): Decrease / increase collision radius.
-- R: Reset forces (generates new random interactions). 
+- R: Reset forces/colors (generates new random interactions and group colors). 
 
 
