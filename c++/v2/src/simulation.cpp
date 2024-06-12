@@ -33,7 +33,7 @@ void Simulation::main_loop() {
 			handle_key_press(event);
 		}
 
-		SDL_SetRenderDrawColor(renderer, 0, 0, 0, 20);
+		SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
 		SDL_RenderClear(renderer);
 
 		build_spatial_grid();
@@ -51,7 +51,6 @@ void Simulation::main_loop() {
 					draw_circle(renderer, &p);
 				}
 			}
-			
 		}
 
 		SDL_RenderPresent(renderer);
@@ -103,16 +102,19 @@ void Simulation::initialize_sim(bool first_time) {
 	// initialize particles and forces
 	for (unsigned int i = 0; i < n_groups; i++) {
 		
+		// group color
 		int R = dis_c(gen);
 		int G = dis_c(gen);
 		int B = dis_c(gen);
 
+		// force matrix
 		for (unsigned int j = 0; j < n_groups; j++) {
 			forces[i][j] = dis_f(gen);
 		}
 
 		for (unsigned int j = 0; j < n_per_group; j++) {
 
+			// actions skipped on reset (first_time = false)
 			if (first_time) {
 				float x = dis_x(gen);
 				float y = dis_y(gen);
@@ -123,6 +125,7 @@ void Simulation::initialize_sim(bool first_time) {
 				p.set_position(x, y, margin);
 				p.set_velocity(vx, vy);
 				p.set_color(R, G, B);
+				
 				p.x_cells = x_cells;
 				p.y_cells = y_cells;
 			
@@ -130,6 +133,10 @@ void Simulation::initialize_sim(bool first_time) {
 				p.group = i;
 			
 				particles.push_back(p);
+			} else {
+				Particle p = particles[i * n_per_group + j];
+				p.set_color(R, G, B);
+				particles[i * n_per_group + j] = p;
 			}		
 		}		
 	}
