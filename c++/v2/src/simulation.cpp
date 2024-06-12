@@ -355,7 +355,7 @@ void Simulation::handle_key_press(SDL_Event &event) {
 		}
 		break;
 	case 93: 
-		if (atr_range < 2*margin) {
+		if (atr_range < margin) {
 			atr_range += 1;
 			std::cout << "attract range: " << atr_range << std::endl;
 		}
@@ -383,6 +383,9 @@ void Simulation::handle_key_press(SDL_Event &event) {
 			collide_radius += 1.0f;
 			std::cout << "collide_radius: " << collide_radius << std::endl;
 		}
+		break;
+	case 102:
+		std::cout << "average frame rate: " << tot_fps/frame << std::endl;
 		break;
 
 	default:
