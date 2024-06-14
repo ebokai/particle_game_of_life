@@ -38,6 +38,10 @@ private:
 	float max_force = 1.0f; // force multiplier
 	float atr_range = 80.0f; // interaction range
 
+	// statistics
+	int tot_fps = 0;
+	int frame = 0;
+
 	// methods
 	void initialize_SDL();
 	void initialize_sim(bool first = true);
@@ -60,4 +64,3 @@ private:
 	std::vector<std::vector<float>> forces;
 
 };
-

@@ -19,8 +19,8 @@ void Simulation::main_loop() {
 
 	SDL_Event event;
 
-	int tot_fps = 0;
-	int frame = 0;
+	// int tot_fps = 0;
+	// int frame = 0;
 
 	while(!(event.type == SDL_QUIT)) {
 
