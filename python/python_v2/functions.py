@@ -71,7 +71,7 @@ def initialize(xlim, ylim, n):
 	yy = yy.flatten()
 	y = yy[:n]
 
-	z = np.arange(np.alen(x))
+	z = np.arange(len(x))
 	z = np.random.permutation(z)
 	x = x[z]
 	y = y[z]

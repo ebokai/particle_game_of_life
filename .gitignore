@@ -1,3 +1,4 @@
 *.exe
 
 __pycache__/
+python_v2_video_generation/
