@@ -1,6 +1,5 @@
-import particle_gol_sim as pgol_sim
-import particle_gol_params as pgol_params
-import particle_gol_functions as pgol_func
+import sim
+import params
 
 import matplotlib.pyplot as plt 
 import matplotlib.animation as anim 
@@ -10,8 +9,8 @@ import time
 
 # initialize 
 
-data, params, forces = pgol_params.params(target_n = 2500, n_groups = 12)
-xlim, ylim = params[2:4]
+data, parameters, forces = params.params(target_n = 2500, n_groups = 12)
+xlim, ylim = parameters[2:4]
 x,y = data[:2]
 colors = data[5]
 
@@ -39,9 +38,9 @@ total_time = 0
 
 for frame in range(frames):
 
-	start = time.time()
+	start = time.perf_counter()
 
-	xy, sizes, colors, data, forces = pgol_sim.sim_loop(data, params, forces)
+	xy, sizes, colors, data, forces = sim.sim_loop(data, parameters, forces)
 
 	particles.set_offsets(xy)
 	particles.set_sizes(sizes)
@@ -52,7 +51,7 @@ for frame in range(frames):
 	plt.savefig(f'c:/users/hp/desktop/frames/frame_{fstr}.png',
 		dpi=72, bbox_inches=None)
 
-	end = time.time()
+	end = time.perf_counter()
 
 	elapsed = end - start 
 	total_time += elapsed

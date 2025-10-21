@@ -1,6 +1,5 @@
-import particle_gol_sim as pgol_sim
-import particle_gol_params as pgol_params
-import particle_gol_functions as pgol_func
+import sim
+import parameters
 
 import matplotlib.pyplot as plt 
 import matplotlib.animation as anim 
@@ -17,14 +16,14 @@ def animate(i):
 
 	global data, params, forces
 
-	xy, sizes, colors, data, forces = pgol_sim.sim_loop(data, params, forces)
+	xy, sizes, colors, data, forces = sim.sim_loop(data, params, forces)
 	particles.set_offsets(xy)
 	particles.set_sizes(sizes)
 	particles.set_color(colors)
 
 	return particles,
 
-data, params, forces = pgol_params.params(target_n = 400, n_groups = 7)
+data, params, forces = parameters.initialize_parameters(target_n = 400, n_groups = 7)
 xlim, ylim = params[2:4]
 x,y = data[:2]
 colors = data[5]

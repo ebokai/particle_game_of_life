@@ -1,8 +1,9 @@
 import moviepy
 import os
 import time
-
 import moviepy.video.io.ImageSequenceClip
+
+
 image_folder = 'c:/users/hp/desktop/frames'
 output_folder = 'c:/users/hp/desktop/frames/render'
 fps = 24
