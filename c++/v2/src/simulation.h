@@ -15,8 +15,8 @@ public:
 private:
 
 	// particle number
-	int n_groups = 12;
-	int n_per_group = 200;
+	int n_groups = 4;
+	int n_per_group = 600;
 	int n_particles = n_groups * n_per_group;
 	
 	// particle properties
@@ -24,9 +24,9 @@ private:
 	float collide_radius = 4.0f;
 
 	// simulation size
-	int width = 1600;
-	int height = 900;
-	int margin = 100;
+	int width = 1920;
+	int height = 1080;
+	int margin = 120;
 
 	// spatial grid cells
 	int x_cells = (width + 2 * margin) / margin;
