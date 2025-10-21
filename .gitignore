@@ -1,4 +1,6 @@
 *.exe
+*.txt
 
 __pycache__/
+bin_old/
 python_v2_video_generation/
